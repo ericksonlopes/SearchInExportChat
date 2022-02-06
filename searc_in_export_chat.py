@@ -1,4 +1,4 @@
-from stopwords import stopwordsnltk
+from stop_words import stopwordsnltk
 from datetime import datetime
 import pandas as pd
 import string
@@ -70,7 +70,7 @@ class SearchInExportChat:
         """
         Função retorna uma lista com todas as mensagens de um determinado número
         """
-        return [item['message'] for item in self.data_return if item['id'] == phone]
+        return [item['message'][1:] for item in self.data_return if item['id'] == phone]
 
     def extract_links_in_message(self, phone: str = None):
         list_message = []
