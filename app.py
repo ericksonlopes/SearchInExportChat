@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'file_folder/'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
-files = 'file_folder/conversa.txt'
+files = 'file_folder/conversa_cortada.txt'
 
 
 @app.route('/')
@@ -24,22 +24,22 @@ def upload_file():
         return 'ok', 201
 
 
-@app.route('/eln', methods=['POST'])
+@app.route('/eln', methods=['GET'])
 def extract_list_numbers():
     sec = SearchInExportChat(files)
-    return jsonify(sec.extract_list_numbers())
+    return jsonify(sec.extract_list_phones())
 
 
 @app.route("/edn", methods=['POST'])
 def extract_data_number():
     sec = SearchInExportChat(files)
-    return jsonify(sec.extract_data_number(request.json['phone']))
+    return jsonify(sec.extract_data_phones(request.json['phone']))
 
 
 @app.route("/emn", methods=['POST'])
 def extract_message_number():
     sec = SearchInExportChat(files)
-    return jsonify(sec.extract_message_number(request.json['phone']))
+    return jsonify(sec.extract_message_phone(request.json['phone']))
 
 
 @app.route("/elm", methods=['POST'])
