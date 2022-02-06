@@ -49,16 +49,11 @@ def extract_links_in_message():
     return jsonify(sec.extract_links_in_message(request.json['phone']))
 
 
-@app.route("/woc/<string:phone>/<string:punctuation>", methods=['POST'])
-def word_occurrence_counter(phone: str, punctuation: str = None):
+@app.route("/woc", methods=['POST'])
+def word_occurrence_counter():
     sec = SearchInExportChat(files)
 
-    if punctuation:
-        punctuation = True
-    else:
-        punctuation = False
-
-    return jsonify(sec.word_occurrence_counter(phone, punctuation))
+    return jsonify(sec.word_occurrence_counter(request.json['phone'], request.json['punctuation']))
 
 
 if __name__ == '__main__':
