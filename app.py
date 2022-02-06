@@ -45,14 +45,12 @@ def extract_message_number():
 @app.route("/elm", methods=['POST'])
 def extract_links_in_message():
     sec = SearchInExportChat(files)
-
     return jsonify(sec.extract_links_in_message(request.json['phone']))
 
 
 @app.route("/woc", methods=['POST'])
 def word_occurrence_counter():
     sec = SearchInExportChat(files)
-
     return jsonify(sec.word_occurrence_counter(request.json['phone'], request.json['punctuation']))
 
 

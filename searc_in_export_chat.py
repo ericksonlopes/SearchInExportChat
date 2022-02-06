@@ -137,11 +137,12 @@ class SearchInExportChat:
 
 if __name__ == '__main__':
     cafe_mm = SearchInExportChat('file_folder/conversa.txt')
-
-    numero = 'Paulo Mota'
+    numero = '@erickson.lds'
     # print(cafe_mm.extract_list_numbers())
     # print(cafe_mm.extract_message_number(numero))
     # print(cafe_mm.extract_data_number(numero))
-    # print(cafe_mm.word_occurrence_counter(numero,  remove_punctuation=False))
+    print(cafe_mm.word_occurrence_counter(numero,  remove_punctuation=False))
     # print(cafe_mm.extract_links_in_message(numero))
 
+    # Quantidade de mensagens enviadas
+    # Colocar links para o telefone e ter uma tela com as estatisticas dele
