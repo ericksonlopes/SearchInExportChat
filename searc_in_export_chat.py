@@ -5,15 +5,15 @@ import string
 import re
 
 
-def clear_data(file: str):
+def clear_data(file: str) -> list:
     data_return = []
     with open(file, "r", encoding="utf-8") as arquivo:
         for line in arquivo.readlines():
             line = line.strip('\n')
 
             # Verifica se a linha esta vazia
-            if line.replace(' ',
-                            '') == '' or "joined using this group's invite link" in line or ' ' in line or line == "\t" or 'saiu' in line or 'entrou usando o link' in line:
+            if line.replace(' ', '') == '' or ' ' in line or line == "\t" or 'saiu' in line\
+                    or 'entrou usando o link' in line:
                 continue
 
             try:
@@ -41,8 +41,8 @@ def clear_data(file: str):
 
             # Cria um dicionário com os dados e adiciona na lista
             data_return.append({
-                "id": line[2][1:],
-                "date": f"{line[0]} {line[1]}",
+                "phone": line[2][1:],
+                "date": datetime.strptime(f"{line[0]} {line[1]}", '%d/%m/%Y %H:%M'),
                 "message": line[-1].lower()
             })
     return data_return
@@ -58,7 +58,7 @@ class SearchInExportChat:
         Função retorna todos os números que enviaram mensagem na conversa
         """
 
-        list_phones = list({item['id'] for item in self.data_return})
+        list_phones = list({item['phone'] for item in self.data_return})
 
         list_return = [{'phone': item} for item in list_phones]
 
@@ -70,7 +70,7 @@ class SearchInExportChat:
         """
 
         if phone:
-            return [item for item in self.data_return if item['id'] == phone]
+            return [item for item in self.data_return if item['phone'] == phone]
         else:
             return self.data_return
 
@@ -78,7 +78,7 @@ class SearchInExportChat:
         """
         Função retorna uma lista com todas as mensagens de um determinado número
         """
-        return [item['message'][1:] for item in self.data_return if item['id'] == phone]
+        return [item['message'][1:] for item in self.data_return if item['phone'] == phone]
 
     def extract_links_in_message(self, phone: str = None) -> list:
         list_message = []
@@ -145,11 +145,14 @@ class SearchInExportChat:
 
 if __name__ == '__main__':
     cafe_mm = SearchInExportChat('file_folder/conversa_cortada.txt')
-    numero = '@erickson.lds'
-    # print(cafe_mm.extract_list_numbers())
-    # print(cafe_mm.extract_message_number(numero))
-    # print(cafe_mm.extract_data_number(numero))
-    print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=False))
+    numero = '+55 31 9496-0270'
+
+    # print(cafe_mm.extract_list_phones())
+    # print(cafe_mm.extract_message_phone(numero))
+    print(cafe_mm.extract_data_phones(numero))
+    # print(cafe_mm.extract_data_phones())
+    # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=False))
+    # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=True))
     # print(cafe_mm.extract_links_in_message(numero))
 
     # Quantidade de mensagens enviadas
