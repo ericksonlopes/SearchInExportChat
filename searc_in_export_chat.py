@@ -1,6 +1,6 @@
 from stop_words import stopwordsnltk
+from collections import Counter
 from datetime import datetime
-import pandas as pd
 import string
 import re
 
@@ -133,10 +133,7 @@ class SearchInExportChat:
         str_message = [item for item in str_message if item not in stopwordsnltk]
 
         # Realiza a da lista contagem com o pandas
-        str_series = pd.Series(str_message).value_counts()
-
-        # Gera um dicionario com o Series gerado
-        str_dict = str_series.to_dict()
+        str_dict = dict(Counter(str_message))
 
         # Junta o dicionario com outro(s)
         str_dict = {**{"Arquivos de midia": midia_file}, **str_dict}
@@ -149,7 +146,7 @@ if __name__ == '__main__':
 
     # print(cafe_mm.extract_list_phones())
     # print(cafe_mm.extract_message_phone(numero))
-    print(cafe_mm.extract_data_phones(numero))
+    # print(cafe_mm.extract_data_phones(numero))
     # print(cafe_mm.extract_data_phones())
     # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=False))
     # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=True))
@@ -157,3 +154,5 @@ if __name__ == '__main__':
 
     # Quantidade de mensagens enviadas
     # Colocar links para o telefone e ter uma tela com as estatisticas dele
+
+    # desistalar o pandas
