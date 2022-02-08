@@ -5,6 +5,9 @@ import string
 import re
 import os
 
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
 
 def clear_data(file: str) -> list:
     data_return = []
@@ -165,6 +168,30 @@ class SearchInExportChat:
         str_dict = {**{"Arquivos de midia": midia_file}, **str_dict}
         return str_dict
 
+    def word_cloud(self, phone: str = None) -> None:
+        list_message, midia_file = [], 0
+
+        # Adiciona todas as mensagens em uma lista
+        for item in self.extract_data_phones(phone):
+            if item['message'].replace(' ', '') != '<arquivodemídiaoculto>':
+                list_message.append(item['message'])
+            else:
+                # captura a quantidade de arquivos de midia enviado
+                midia_file += 1
+
+        # Cria uma lista com todas as palavras separadas por espaço
+        str_message = ' '.join(list_message)
+
+        # Separa a string por espaços para formar uma lista
+        str_message = str_message.split()
+
+        # retira as stopwords
+        str_message = [item for item in str_message if item not in stopwordsnltk]
+
+        wordcloud = WordCloud().generate(' '.join(str_message))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.savefig('teste.png')
+
 
 if __name__ == '__main__':
     cafe_mm = SearchInExportChat('file_folder/conversa')
@@ -178,9 +205,9 @@ if __name__ == '__main__':
     # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=True))
     # print(cafe_mm.extract_links_in_message(numero))
     # print(cafe_mm.count_messages_number(numero))
-    # [print(_) for _ in cafe_mm.search_text_in_message('celular')]
+    # [print(_) for _ in cafe_mm.search_text_in_message('asterisco')]
     # [print(_) for _ in cafe_mm.search_text_in_message('celular', 'Paulo Mota')]
-
+    cafe_mm.word_cloud('+55 31 8950-6741')
 
     # Quantidade de mensagens enviadas
     # Colocar links para o telefone e ter uma tela com as estatisticas dele
