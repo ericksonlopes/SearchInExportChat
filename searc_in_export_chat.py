@@ -86,6 +86,17 @@ class SearchInExportChat:
         else:
             return self.data_return
 
+    def count_messages_number(self, phone: str = None) -> int:
+        """
+        Retorna a quantidade de mensagens
+        :param phone:
+        :return:
+        """
+        if phone:
+            return len(self.data_return)
+        else:
+            return len([_ for _ in self.data_return if _['phone'] == phone])
+
     def extract_links_in_message(self, phone: str = None) -> list:
         list_message = []
 
@@ -106,6 +117,18 @@ class SearchInExportChat:
         url = re.findall(regex, str_message)
 
         return [x[0] for x in url]
+
+    def search_text_in_message(self, text: str, phone: str = None) -> list:
+        """
+        Procura o texto especificado nas mensagens
+        :param text:
+        :param phone:
+        :return:
+        """
+        if phone:
+            return [item for item in self.data_return if text in item['message'] and item['phone'] == phone]
+        else:
+            return [item for item in self.data_return if text in item['message']]
 
     def word_occurrence_counter(self, phone: str, remove_punctuation: bool = False) -> dict:
         """
@@ -142,17 +165,6 @@ class SearchInExportChat:
         str_dict = {**{"Arquivos de midia": midia_file}, **str_dict}
         return str_dict
 
-    def count_messages_number(self, phone: str) -> int:
-        """
-        Retorna a quantidade de mensagens
-        :param phone:
-        :return:
-        """
-        return len([_ for _ in self.data_return if _['phone'] == phone])
-
-    def search_text_in_message(self, text: str) -> list:
-        return [item for item in self.data_return if text in item['message']]
-
 
 if __name__ == '__main__':
     cafe_mm = SearchInExportChat('file_folder/conversa')
@@ -166,7 +178,8 @@ if __name__ == '__main__':
     # print(cafe_mm.word_occurrence_counter(numero, remove_punctuation=True))
     # print(cafe_mm.extract_links_in_message(numero))
     # print(cafe_mm.count_messages_number(numero))
-    [print(_) for _ in cafe_mm.search_text_in_message('celular')]
+    # [print(_) for _ in cafe_mm.search_text_in_message('celular')]
+    # [print(_) for _ in cafe_mm.search_text_in_message('celular', 'Paulo Mota')]
 
 
     # Quantidade de mensagens enviadas
