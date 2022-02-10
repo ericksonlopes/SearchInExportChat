@@ -7,7 +7,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'file_folder/'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
-files = 'file_folder/conversa_cortada'
+files = 'conversa'
+sec = SearchInExportChat(files)
 
 
 @app.route('/')
@@ -24,33 +25,23 @@ def upload_file():
         return 'ok', 201
 
 
-@app.route('/eln', methods=['GET'])
+@app.route('/list-numbers', methods=['GET'])
 def extract_list_numbers():
-    sec = SearchInExportChat(files)
     return jsonify(sec.extract_list_phones())
 
 
-@app.route("/edn", methods=['POST', 'OPTIONS'])
-def extract_data_number():
-    sec = SearchInExportChat(files)
-    return jsonify(sec.extract_data_phones(request.json['phone']))
-
-
-@app.route("/emn", methods=['POST'])
+@app.route("/filter", methods=['POST'])
 def extract_message_number():
-    sec = SearchInExportChat(files)
-    return jsonify(sec.extract_message_phone(request.json['phone']))
+    return jsonify(sec.filter_data(**request.args.to_dict()))
 
 
-@app.route("/elm", methods=['POST'])
+@app.route("/list-links", methods=['POST'])
 def extract_links_in_message():
-    sec = SearchInExportChat(files)
     return jsonify(sec.extract_links_in_message(request.json['phone']))
 
 
 @app.route("/woc", methods=['POST'])
 def word_occurrence_counter():
-    sec = SearchInExportChat(files)
     return jsonify(sec.word_occurrence_counter(request.json['phone'], request.json['punctuation']))
 
 

@@ -1,5 +1,9 @@
-from collections import Counter
+# from collections import Counter
+#
+# counter = Counter(['red', 'red', 'blue'])
+#
+# print(dict(counter))
 
-counter = Counter(['red', 'red', 'blue'])
+from datetime import datetime
 
-print(dict(counter))
+print(datetime(2022, 1, 16, 9, 34))

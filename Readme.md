@@ -1,0 +1,1 @@
+os dados não são lançados em banco de dados por ser dados sensiveis
