@@ -1,66 +1,84 @@
 from stop_words import stopwordsnltk
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 from collections import Counter
 from datetime import datetime
 import string
 import re
 import os
 
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 
+class ClearDataFiles:
+    def __init__(self):
+        # Pasta de arquivo das conversas
+        self.folder_files = 'file_folder/'
+        if not os.path.exists(self.folder_files):
+            os.mkdir(self.folder_files)
 
-def clear_data(file: str) -> list:
-    data_return = []
-    with open(file, "r", encoding="utf-8") as arquivo:
-        for line in arquivo.readlines():
-            line = line.strip('\n')
+    def clear_data(self, file: str) -> list:
+        data_return = []
+        with open(f"{self.folder_files}/{file}", "r", encoding="utf-8") as arquivo:
+            for line in arquivo.readlines():
+                line = line.strip('\n')
 
-            # Verifica se a linha esta vazia
-            if line.replace(' ', '') == '' or ' ' in line or line == "\t" or 'saiu' in line or 'entrou usando o link' \
-                    in line or 'Nem mesmo o WhatsApp pode ler ou ouvi-las. Toque para saber mais.' in line:
-                continue
+                # Verifica se a linha esta vazia
+                if line.replace(' ',
+                                '') == '' or ' ' in line or line == "\t" or 'saiu' in line or 'entrou usando o link' \
+                        in line or 'Nem mesmo o WhatsApp pode ler ou ouvi-las. Toque para saber mais.' in line or \
+                        'Você bloqueou esse contato' in line or 'Você desbloqueou esse contato.' in line:
+                    continue
 
-            try:
                 try:
-                    # Verifica se é do tipo data
-                    datetime.strptime(line.split()[0], '%d/%m/%Y').date()
+                    try:
+                        # Verifica se é do tipo data
+                        datetime.strptime(line.split()[0], '%d/%m/%Y').date()
+                    except Exception:
+                        # Verifica se é do tipo data
+                        datetime.strptime(line.split()[0][:-1], '%m/%d/%y').date()
+
                 except Exception:
-                    # Verifica se é do tipo data
-                    datetime.strptime(line.split()[0][:-1], '%m/%d/%y').date()
+                    # Caso de erro, verifica se a list esta vazia
+                    if data_return:
+                        # Adiciona concatena a ultima mensagem
+                        data_return[-1]['message'] += f" {line}"
+                    continue
 
-            except Exception:
-                # Caso de erro, verifica se a list esta vazia
-                if data_return:
-                    # Adiciona concatena a ultima mensagem
-                    data_return[-1]['message'] += f" {line}"
-                continue
+                # Tira a quebra de linha e separa em data, hora / contato, mensagem
+                line = line.split('-', 1)
+                # Remove os espaços da data / separa a mensagem do contato
+                try:
+                    line = line[0].split() + line[1].split(':', 1)
+                except Exception:
+                    continue
 
-            # Tira a quebra de linha e separa em data, hora / contato, mensagem
-            line = line.split('-', 1)
-            # Remove os espaços da data / separa a mensagem do contato
-            try:
-                line = line[0].split() + line[1].split(':', 1)
-            except Exception:
-                continue
-
-            # Cria um dicionário com os dados e adiciona na lista
-            data_return.append({
-                "phone": line[2][1:],
-                "date": datetime.strptime(f"{line[0]} {line[1]}", '%d/%m/%Y %H:%M'),
-                "message": line[-1].lower()
-            })
-    return data_return
+                # Cria um dicionário com os dados e adiciona na lista
+                data_return.append({
+                    "phone": line[2][1:],
+                    "date": datetime.strptime(f"{line[0]} {line[1]}", '%d/%m/%Y %H:%M'),
+                    "message": line[-1].lower()[1:]
+                })
+        return data_return
 
 
-class SearchInExportChat:
-
+class SearchInExportChat(ClearDataFiles):
     def __init__(self, file: str):
-        if not os.path.exists('file_folder'):
-            # cria a pasta
-            os.mkdir('file_folder')
+        super().__init__()
 
         # Recebe os dados limpos
-        self.data_return = clear_data(file)
+        self.data_return = self.clear_data(file)
+
+        self.group_or_chat: str
+        self.folder_word_cloud = 'word_cloud/'
+        if not os.path.exists(self.folder_word_cloud):
+            os.mkdir(self.folder_word_cloud)
+
+        # Verifica se é uma conversa ou grupo
+        if len(self.extract_list_phones()) > 2:
+            self.group_or_chat = 'grupo'
+        else:
+            self.group_or_chat = 'chat'
+
+        print(self.group_or_chat)
 
     def extract_list_phones(self) -> list:
         """
@@ -77,7 +95,7 @@ class SearchInExportChat:
         """
         Função retorna uma lista com todas as mensagens de um determinado número
         """
-        return [item['message'][1:] for item in self.data_return if item['phone'] == phone]
+        return [item['message'] for item in self.data_return if item['phone'] == phone]
 
     def extract_data_phones(self, phone: str = None) -> list:
         """
@@ -190,12 +208,12 @@ class SearchInExportChat:
 
         wordcloud = WordCloud().generate(' '.join(str_message))
         plt.imshow(wordcloud, interpolation="bilinear")
-        plt.savefig('teste.png')
+        plt.savefig(self.folder_word_cloud + phone.replace(" ", "") if phone is not None else 'Grupo')
 
 
 if __name__ == '__main__':
-    cafe_mm = SearchInExportChat('file_folder/conversa')
-    numero = 'Paulo Mota'
+    cafe_mm = SearchInExportChat("conversa")
+    # numero = 'Paulo Mota'
 
     # print(cafe_mm.extract_list_phones())
     # print(cafe_mm.extract_message_phone(numero))
@@ -207,9 +225,8 @@ if __name__ == '__main__':
     # print(cafe_mm.count_messages_number(numero))
     # [print(_) for _ in cafe_mm.search_text_in_message('asterisco')]
     # [print(_) for _ in cafe_mm.search_text_in_message('celular', 'Paulo Mota')]
-    cafe_mm.word_cloud('+55 31 8950-6741')
+    cafe_mm.word_cloud()
 
     # Quantidade de mensagens enviadas
     # Colocar links para o telefone e ter uma tela com as estatisticas dele
-
     # desistalar o pandas
