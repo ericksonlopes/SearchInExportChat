@@ -27,7 +27,7 @@ def upload_file():
 
 @app.route('/list-numbers', methods=['GET'])
 def extract_list_numbers():
-    return jsonify(sec.extract_list_phones())
+    return jsonify(sec.list_phones())
 
 
 @app.route("/filter", methods=['POST'])

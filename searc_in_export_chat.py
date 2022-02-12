@@ -1,8 +1,8 @@
+from datetime import datetime, timezone
 from stop_words import stopwordsnltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from collections import Counter
-from datetime import datetime, timezone
 import string
 import re
 import os
@@ -95,39 +95,48 @@ class SearchInExportChat(ClearDataFiles):
             os.mkdir(self.folder_word_cloud)
 
         # Verifica se é uma conversa ou grupo
-        if len(self.extract_list_phones()) > 2:
+        if len(self.list_phones()) > 2:
             self.type_chat = 'grupo'
         else:
             self.type_chat = 'chat'
 
     # Extrai todos os números
-    def extract_list_phones(self) -> list:
+    def list_phones(self, date: str = None) -> list:
         """
         Função retorna todos os números que enviaram mensagem na conversa
         """
 
-        list_phones = list({item['phone'] for item in self.clean_data})
+        list_phones = list({item['phone'] for item in self.filter_data(date=date)})
 
         return list_phones
 
-    def count_messages_number(self, phone: str = None) -> int:
+    # Conta a quantidade de mensagens por numero ou conversa e por data
+    def count_messages(self, phone: str = None, date: str = None) -> list:
         """
         Retorna a quantidade de mensagens
-        :param phone:
+        :param date: Recebe Data para filtragem
+        :type date: string
+        :param phone: Recebe o número que deve buscar
+        :type phone: string
         :return:
         """
+        list_return = []
         if phone:
-            return len(self.clean_data)
+            list_return.append({"phone": phone, "messages_number": len(self.filter_data(phone=phone, date=date))})
         else:
-            return len([_ for _ in self.clean_data if _['phone'] == phone])
+            [list_return.append({'phone': number, 'messages_number': len(self.filter_data(phone=number, date=date))})
+             for number in self.list_phones(date=date)]
 
-    def extract_links_in_message(self, phone: str = None) -> list:
+        return sorted(list_return, key=lambda k: k['messages_number'], reverse=True)
+
+    # Pode extrair links de conversar ou numero e por data
+    def extract_links(self, phone: str = None, date: str = None) -> list:
         list_message = []
 
         midia_file = 0
 
         # Adiciona todas as mensagens em uma lista
-        for item in self.filter_data(phone=phone):
+        for item in self.filter_data(phone=phone, date=date):
             if item['message'].replace(' ', '') != '<arquivodemídiaoculto>':
                 list_message.append(item['message'])
             else:
@@ -142,18 +151,6 @@ class SearchInExportChat(ClearDataFiles):
         url = re.findall(regex, str_message)
 
         return [x[0] for x in url]
-
-    def search_text_in_message(self, text: str, phone: str = None) -> list:
-        """
-        Procura o texto especificado nas mensagens
-        :param text:
-        :param phone:
-        :return:
-        """
-        if phone:
-            return [item for item in self.clean_data if text in item['message'] and item['phone'] == phone]
-        else:
-            return [item for item in self.clean_data if text in item['message']]
 
     def word_occurrence_counter(self, phone: str, remove_punctuation: bool = False) -> dict:
         """
@@ -190,13 +187,14 @@ class SearchInExportChat(ClearDataFiles):
         str_dict = {**{"Arquivos de midia": midia_file}, **str_dict}
         return str_dict
 
-    def word_cloud(self, phone: str = None) -> None:
+    def word_cloud(self, phone: str = None, date: str = None) -> None:
         list_message, midia_file = [], 0
 
         # Adiciona todas as mensagens em uma lista
-        for item in self.filter_data(phone=phone):
+        for item in self.filter_data(phone=phone, date=date):
             if item['message'].replace(' ', '') != '<arquivodemídiaoculto>':
-                list_message.append(item['message'])
+                if item['message'].replace(' ', '') != 'mensagemapagada':
+                    list_message.append(item['message'])
             else:
                 # captura a quantidade de arquivos de midia enviado
                 midia_file += 1
@@ -216,15 +214,25 @@ class SearchInExportChat(ClearDataFiles):
 
 
 if __name__ == '__main__':
-    classe = SearchInExportChat("conversa")
+    # classe = SearchInExportChat("conversa")
     numero = 'Paulo Mota'
 
     # print(classe.extract_list_phones())
 
     # print(classe.filter_data(phone=numero))
 
-    print(classe.filter_data(phone=numero, message='demorando', date='2022-01-16T00:00:00.00'))
+    # print(classe.filter_data(phone=numero, message='demorando', date='2022-01-16T00:00:00.00'))
 
-    # Quantidade de mensagens enviadas
+    # print(classe.word_cloud(date='2022-01-09T00:00:00.00'))
+
+    # print(classe.extract_links())
+
+    # print(classe.count_messages(phone='+55 21 97027-6712'))
+    # print(classe.count_messages())
+
+    classe = SearchInExportChat("conversa")
+    # Quantidade de mensagens enviada por cada participante
+    [print(_) for _ in classe.count_messages()]
+
     # Colocar links para o telefone e ter uma tela com as estatisticas dele
     # desistalar o pandas
