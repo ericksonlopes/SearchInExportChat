@@ -11,21 +11,21 @@ import os
 class ClearDataFiles:
     def __init__(self, file: str):
         # Pasta de arquivo das conversas
-        self.folder_files = 'file_folder/'
-        if not os.path.exists(self.folder_files):
-            os.mkdir(self.folder_files)
+        self.__folder_files = 'file_folder/'
+        if not os.path.exists(self.__folder_files):
+            os.mkdir(self.__folder_files)
 
         # Recebe os dados limpos
-        self.clean_data = self.clear_data(file)
+        self.__clean_data = self.__clear_data(file)
 
-    def clear_data(self, file: str) -> list:
+    def __clear_data(self, file: str) -> list:
         """
         Limpa o arquivo com os dados
         :param file: arquivo com a exportação da conversa
         :return: retorna uma lista de dicionarios
         """
         data_return = []
-        with open(f"{self.folder_files}/{file}", "r", encoding="utf-8") as arquivo:
+        with open(f"{self.__folder_files}/{file}", "r", encoding="utf-8") as arquivo:
             for line in arquivo.readlines():
                 line = line.strip('\n')
 
@@ -71,7 +71,7 @@ class ClearDataFiles:
         :param message: para encontrar dentro
         :return:
         """
-        list_data = self.clean_data
+        list_data = self.__clean_data
 
         if phone:
             list_data = [_ for _ in list_data if _["phone"] == phone]
@@ -88,17 +88,17 @@ class ClearDataFiles:
 class SearchInExportChat(ClearDataFiles):
     def __init__(self, file: str):
         super().__init__(file)
-        self.type_chat: str
-        self.folder_word_cloud = 'word_cloud/'
+        self.__type_chat: str
+        self.__folder_word_cloud = 'word_cloud/'
 
-        if not os.path.exists(self.folder_word_cloud):
-            os.mkdir(self.folder_word_cloud)
+        if not os.path.exists(self.__folder_word_cloud):
+            os.mkdir(self.__folder_word_cloud)
 
         # Verifica se é uma conversa ou grupo
         if len(self.list_phones()) > 2:
-            self.type_chat = 'grupo'
+            self.__type_chat = 'grupo'
         else:
-            self.type_chat = 'chat'
+            self.__type_chat = 'chat'
 
     # Extrai todos os números
     def list_phones(self, date: str = None) -> list:
@@ -210,7 +210,7 @@ class SearchInExportChat(ClearDataFiles):
 
         wordcloud = WordCloud().generate(' '.join(str_message))
         plt.imshow(wordcloud, interpolation="bilinear")
-        plt.savefig(self.folder_word_cloud + phone.replace(" ", "") if phone is not None else 'Grupo')
+        plt.savefig(self.__folder_word_cloud + phone.replace(" ", "") if phone is not None else 'Grupo')
 
 
 if __name__ == '__main__':
@@ -229,7 +229,6 @@ if __name__ == '__main__':
 
     # print(classe.count_messages(phone='+55 21 97027-6712'))
     # print(classe.count_messages())
-
     classe = SearchInExportChat("conversa")
     # Quantidade de mensagens enviada por cada participante
     [print(_) for _ in classe.count_messages()]
