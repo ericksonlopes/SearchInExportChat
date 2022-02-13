@@ -1,13 +1,16 @@
-from werkzeug.utils import secure_filename
+import uuid
+
 from flask import Flask, request, jsonify, send_file
 from searc_in_export_chat import SearchInExportChat
+from werkzeug.utils import secure_filename
+from connect_db import ConnectDB
 import os
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'file_folder/'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
-files = 'conversa'
+files = 'conversa_cortada'
 sec = SearchInExportChat(files)
 
 
@@ -18,10 +21,25 @@ def index():
 
 @app.route('/uploader', methods=['POST'])
 def upload_file():
+    db = ConnectDB()
+
     if request.method == 'POST':
         file = request.files['file']
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        id_uuid = str(uuid.uuid4())
+        # Caminho para salvar o arquivo
+        path = os.path.join(app.config['UPLOAD_FOLDER'], id_uuid)
+        # salva o arquivo
+        file.save(path)
+        # abre uma conxão com o banco
+        connect = db.connect()
+        cursor = connect.cursor()
+
+        sql = "insert into files (uuid, path_name, name_file) values (?, ?, ?)"
+        datas = (id_uuid, path, secure_filename(file.filename))
+
+        cursor.execute(sql, datas)
+        connect.commit()
+        cursor.close()
         return 'ok', 201
 
 

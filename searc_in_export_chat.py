@@ -224,7 +224,7 @@ class SearchInExportChat(ClearDataFiles):
 
 
 if __name__ == '__main__':
-    classe = SearchInExportChat("conversa")
+    # classe = SearchInExportChat("conversa")
     numero = 'Paulo Mota'
 
     # print(classe.filter_data(phone=numero))
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 
     # print(classe.word_cloud(date='2022-01-09T00:00:00.00'))
 
-    print(classe.extract_links(phone='Paulo Mota'))
+    # print(classe.extract_links(phone='Paulo Mota'))
 
     # print(classe.count_messages(phone='@erickson.lds'))
     # print(classe.count_messages())
