@@ -1,13 +1,11 @@
-import uuid
 from datetime import datetime, timezone
-
-from typing import List
-
 from stop_words import stopwordsnltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from collections import Counter
+from typing import List
 import string
+import uuid
 import re
 import os
 
