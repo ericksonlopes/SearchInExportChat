@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone
 
 from typing import List
@@ -186,7 +187,7 @@ class SearchInExportChat(ClearDataFiles):
 
         return return_ordered
 
-    def word_cloud(self, phone: str = None, date: str = None) -> None:
+    def word_cloud(self, phone: str = None, date: str = None):
         list_message, midia_file = [], 0
 
         # Adiciona todas as mensagens em uma lista
@@ -207,9 +208,21 @@ class SearchInExportChat(ClearDataFiles):
         # retira as stopwords
         str_message = [item for item in str_message if item not in stopwordsnltk]
 
+        # Rega o word cloud
         wordcloud = WordCloud().generate(' '.join(str_message))
+
+        # Cria um img
+        plt.axis('off')
         plt.imshow(wordcloud, interpolation="bilinear")
-        plt.savefig(self.__folder_word_cloud + phone.replace(" ", "") if phone is not None else 'Grupo')
+
+        arquivo = f"{self.__folder_word_cloud}{phone.replace(' ', '') if phone is not None else 'Grupo'}" \
+                  f"{str(uuid.uuid1())}.png"
+
+        # Salva a imagem
+        plt.savefig(arquivo)
+
+        # Retorna o arquivo
+        return arquivo
 
 
 if __name__ == '__main__':

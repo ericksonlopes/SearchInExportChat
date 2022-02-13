@@ -1,5 +1,5 @@
 from werkzeug.utils import secure_filename
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from searc_in_export_chat import SearchInExportChat
 import os
 
@@ -27,22 +27,35 @@ def upload_file():
 
 @app.route('/list-numbers', methods=['GET'])
 def extract_list_numbers():
-    return jsonify(sec.list_phones())
+    return jsonify(sec.list_phones()), 201
 
 
 @app.route("/filter", methods=['POST'])
 def extract_message_number():
-    return jsonify(sec.filter_data(**request.args.to_dict()))
+    # **request.args.to_dict()
+    return jsonify(sec.filter_data(
+        phone=request.json['phone'],
+        date=request.json['date'],
+        message=request.json['message'])), 201
 
 
 @app.route("/list-links", methods=['POST'])
-def extract_links_in_message():
-    return jsonify(sec.extract_links(phone=request.json['phone']))
+def extract_links():
+    return jsonify(sec.extract_links(phone=request.json['phone'])), 201
 
 
-@app.route("/woc", methods=['POST'])
+@app.route("/word-occurence", methods=['POST'])
 def word_occurrence_counter():
-    return jsonify(sec.word_occurrence_counter(request.json['phone'], request.json['punctuation']))
+    return jsonify(sec.word_occurrence_counter(
+        phone=request.json['phone'],
+        remove_punctuation=request.json['punctuation'])
+    ), 201
+
+
+@app.route("/word-cloud", methods=['POST'])
+def word_cloud():
+    file_path = sec.word_cloud(phone=request.json['phone'], date=request.json['date'])
+    return send_file(file_path)
 
 
 if __name__ == '__main__':
