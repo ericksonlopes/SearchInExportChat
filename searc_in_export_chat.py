@@ -1,4 +1,7 @@
 from datetime import datetime, timezone
+
+from typing import List
+
 from stop_words import stopwordsnltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -52,6 +55,7 @@ class ClearDataFiles:
                 try:
                     line = line[0].split() + line[1].split(':', 1)
                 except Exception:
+                    print('dado não capturado')
                     continue
 
                 # Cria um dicionário com os dados e adiciona na lista
@@ -111,7 +115,7 @@ class SearchInExportChat(ClearDataFiles):
         return list_phones
 
     # Conta a quantidade de mensagens por numero ou conversa e por data
-    def count_messages(self, phone: str = None, date: str = None) -> list:
+    def count_messages(self, phone: str = None, date: str = None) -> List[dict]:
         """
         Retorna a quantidade de mensagens
         :param date: Recebe Data para filtragem
@@ -131,35 +135,23 @@ class SearchInExportChat(ClearDataFiles):
 
     # Pode extrair links de conversar ou numero e por data
     def extract_links(self, phone: str = None, date: str = None) -> list:
-        list_message = []
-
-        midia_file = 0
-
-        # Adiciona todas as mensagens em uma lista
-        for item in self.filter_data(phone=phone, date=date):
-            if item['message'].replace(' ', '') != '<arquivodemídiaoculto>':
-                list_message.append(item['message'])
-            else:
-                # captura a quantidade de arquivos de midia enviado
-                midia_file += 1
-
-        # Cria uma lista com todas as palavras separadas por espaço
-        str_message = ' '.join(list_message)
+        str_message = ' '.join([_['message'] for _ in self.filter_data(phone=phone, date=date)])
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(" \
-                r")<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’])) "
+                r")<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+
         url = re.findall(regex, str_message)
 
         return [x[0] for x in url]
 
-    def word_occurrence_counter(self, phone: str, remove_punctuation: bool = False) -> dict:
+    def word_occurrence_counter(self, phone: str = None, remove_punctuation: bool = False, date: str = None):
         """
         Retorna uma lista de ocorrencias de todas as palavras enviadas pelo número especificado
         """
         list_message, midia_file = [], 0
 
         # Adiciona todas as mensagens em uma lista
-        for item in self.filter_data(phone=phone):
+        for item in self.filter_data(phone=phone, date=date):
             if item['message'].replace(' ', '') != '<arquivodemídiaoculto>':
                 list_message.append(item['message'])
             else:
@@ -185,7 +177,14 @@ class SearchInExportChat(ClearDataFiles):
 
         # Junta o dicionario com outro(s)
         str_dict = {**{"Arquivos de midia": midia_file}, **str_dict}
-        return str_dict
+
+        # ordena a lista
+        ordered = sorted(str_dict.items(), key=lambda x: x[1], reverse=True)
+
+        # Transforma a lsita de tupla em dicionario
+        return_ordered = [{x: y} for x, y in zip([_[0] for _ in ordered], [_[1] for _ in ordered])]
+
+        return return_ordered
 
     def word_cloud(self, phone: str = None, date: str = None) -> None:
         list_message, midia_file = [], 0
@@ -214,10 +213,8 @@ class SearchInExportChat(ClearDataFiles):
 
 
 if __name__ == '__main__':
-    # classe = SearchInExportChat("conversa")
+    classe = SearchInExportChat("conversa")
     numero = 'Paulo Mota'
-
-    # print(classe.extract_list_phones())
 
     # print(classe.filter_data(phone=numero))
 
@@ -225,13 +222,14 @@ if __name__ == '__main__':
 
     # print(classe.word_cloud(date='2022-01-09T00:00:00.00'))
 
-    # print(classe.extract_links())
+    print(classe.extract_links(phone='Paulo Mota'))
 
-    # print(classe.count_messages(phone='+55 21 97027-6712'))
+    # print(classe.count_messages(phone='@erickson.lds'))
     # print(classe.count_messages())
-    classe = SearchInExportChat("conversa")
+
     # Quantidade de mensagens enviada por cada participante
-    [print(_) for _ in classe.count_messages()]
+    # [print(_) for _ in classe.count_messages()]
+
+    # print(classe.word_occurrence_counter(phone='@erickson.lds'))
 
     # Colocar links para o telefone e ter uma tela com as estatisticas dele
-    # desistalar o pandas

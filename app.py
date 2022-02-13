@@ -37,7 +37,7 @@ def extract_message_number():
 
 @app.route("/list-links", methods=['POST'])
 def extract_links_in_message():
-    return jsonify(sec.extract_links_in_message(request.json['phone']))
+    return jsonify(sec.extract_links(phone=request.json['phone']))
 
 
 @app.route("/woc", methods=['POST'])
