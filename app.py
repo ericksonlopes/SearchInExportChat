@@ -11,10 +11,10 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
 @app.route('/')
 def index():
-    return 'Ok'
+    return 'Ok ola'
 
 
-@app.route('/uploader', methods=['POST', 'GET'])
+@app.route('/uploader', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']

@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from typing import List
 import string
-import uuid
 import re
 import os
 
@@ -33,7 +32,8 @@ class ClearDataFiles:
                 if line.replace(' ',
                                 '') == '' or ' ' in line or line == "\t" or 'saiu' in line or 'entrou usando o link' \
                         in line or 'Nem mesmo o WhatsApp pode ler ou ouvi-las. Toque para saber mais.' in line or \
-                        'Você bloqueou esse contato' in line or 'Você desbloqueou esse contato.' in line:
+                        'Você bloqueou esse contato' in line or 'Você desbloqueou esse contato.' in line or \
+                        line is None:
                     continue
 
                 try:
@@ -41,15 +41,20 @@ class ClearDataFiles:
                     datetime.strptime(line.split()[0], '%d/%m/%Y').date()
                 except Exception:
                     # Caso de erro, verifica se a list esta vazia
-                    if data_return:
-                        try:
-                            # Adiciona concatena a ultima mensagem
-                            message = data_return[-1]
-                            tupla = list(data_return[-1]).insert(-1, f"{message} {line}")
+                    # if data_return:
+                    #     try:
+                    #         if line:
+                    #             texto = list(data_return[-1])
+                    #             texto[-1] = f"{texto} {str(line)}"
+                    #
+                    #             print(texto)
+                    #
+                    #             data_return[-1] = tuple(texto)
+                    #
+                    #     except Exception as error:
+                    #         print(f"[{data_return[-1]}] [{str(line)}] [{error}]")
+                    #         continue
 
-                            data_return.insert(-1, tupla)
-                        except Exception as error:
-                            print(data_return[-1], f" {line}", error)
                     continue
 
                 # Tira a quebra de linha e separa em data, hora / contato, mensagem
@@ -68,7 +73,7 @@ class ClearDataFiles:
                     datetime.strptime(f"{line[0]} {line[1]}", '%d/%m/%Y %H:%M'),
                     line[-1].lower()[1:]
                 ))
-        print(data_return)
+
         return data_return
 
 
@@ -76,4 +81,3 @@ if __name__ == '__main__':
     classe = ClearDataFiles().clear_data("conversa", 1)
     numero = 'Paulo Mota'
     # [print(_[-1]) for _ in classe]
-

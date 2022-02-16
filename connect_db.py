@@ -60,9 +60,7 @@ class AddDataToDB(ConnectDB):
 
         connect.commit()
         cursor.close()
-
         print(id_new_file)
-
         # retorna o novo id
         self.__add_data(id_file=id_new_file[0][0], id_uuid=id_new_file[0][1])
 
@@ -71,9 +69,14 @@ class AddDataToDB(ConnectDB):
         connect = self.connect()
         cursor = connect.cursor()
 
-        sql = "insert into messages (phone, date, message, file_id) values (?, ?, ?, ?)"
+        sql = "insert into messages (file_id, phone, date, message) values (?, ?, ?, ?)"
 
         cursor.executemany(sql, data)
-        print(sql, data)
+
         connect.commit()
         cursor.close()
+
+
+class FiltersDB(ConnectDB):
+    def __init__(self):
+        super().__init__()
