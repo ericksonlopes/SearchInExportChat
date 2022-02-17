@@ -105,7 +105,6 @@ class SearchInExportChat(ClearDataFiles):
         else:
             self.__type_chat = 'chat'
 
-    # Extrai todos os números
     def list_phones(self, date: str = None) -> list:
         """
         Função retorna todos os números que enviaram mensagem na conversa
@@ -115,7 +114,6 @@ class SearchInExportChat(ClearDataFiles):
 
         return list_phones
 
-    # Conta a quantidade de mensagens por numero ou conversa e por data
     def count_messages(self, phone: str = None, date: str = None) -> List[dict]:
         """
         Retorna a quantidade de mensagens
@@ -134,8 +132,14 @@ class SearchInExportChat(ClearDataFiles):
 
         return sorted(list_return, key=lambda k: k['messages_number'], reverse=True)
 
-    # Pode extrair links de conversar ou numero e por data
     def extract_links(self, phone: str = None, date: str = None) -> list:
+        """
+        Extrai todas as links
+
+        :param phone: str
+        :param date: str
+        :return:
+        """
         str_message = ' '.join([_['message'] for _ in self.filter_data(phone=phone, date=date)])
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(" \
@@ -188,6 +192,13 @@ class SearchInExportChat(ClearDataFiles):
         return return_ordered
 
     def word_cloud(self, phone: str = None, date: str = None):
+        """
+        Gera uma imagem word_cloud
+        :param phone:
+        :param date:
+        :return:
+        """
+
         list_message, midia_file = [], 0
 
         # Adiciona todas as mensagens em uma lista
@@ -229,20 +240,29 @@ if __name__ == '__main__':
     classe = SearchInExportChat("conversa")
     numero = 'Paulo Mota'
 
-    # print(classe.filter_data(phone=numero))
-
+    # Filtragem com todos os parametros
     # print(classe.filter_data(phone=numero, message='demorando', date='2022-01-16T00:00:00.00'))
+    # Traz todos os dados
+    # print(classe.filter_data())
 
-    # print(classe.word_cloud(date='2022-01-09T00:00:00.00'))
-
-    print(classe.extract_links(phone='Paulo Mota'))
-
-    # print(classe.count_messages(phone='@erickson.lds'))
+    # # Conta quantidadede de mensagens que o numero passado
+    # print(classe.count_messages(phone='@erickson.lds', date='2022-01-16T00:00:00.00'))
+    # # Conta quantas mensagens todos os numeros enviaram
     # print(classe.count_messages())
 
-    # Quantidade de mensagens enviada por cada participante
-    # [print(_) for _ in classe.count_messages()]
+    # # Extrai todos os links dentro dos filtros
+    # print(classe.extract_links(phone='Paulo Mota', date='2022-01-16T00:00:00.00'))
+    # # Extrai todos os links
+    # print(classe.extract_links())
 
-    # print(classe.word_occurrence_counter(phone='@erickson.lds'))
+    # # Lista os numeros que são encontrado na data determinada
+    # print(classe.list_phones(date='2022-01-16T00:00:00.00'))
+    # # Lista todos os numeros encontrado na conversa
+    # print(classe.list_phones())
 
-    # Colocar links para o telefone e ter uma tela com as estatisticas dele
+    # Gera o word cloud
+    # print(classe.word_cloud(phone="Paulo Mota", date='2022-01-09T00:00:00.00'))
+
+    # Conta quantas vezes o numero determinado digitou especificas palavras
+    # print(classe.word_occurrence_counter(phone='Paulo Mota'))
+
