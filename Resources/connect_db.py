@@ -1,7 +1,6 @@
+from searc_in_export_chat import ClearDataFiles
 import sqlite3
 import os
-
-from searc_in_export_chat import ClearDataFiles
 
 
 class ConnectDB:

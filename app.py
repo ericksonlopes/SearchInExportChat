@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, send_file
+from Resources.connect_db import AddDataToDB
 from werkzeug.utils import secure_filename
-from connect_db import AddDataToDB
+from flask import Flask, request
 import uuid
 import os
 
