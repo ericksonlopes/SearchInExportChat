@@ -5,7 +5,7 @@ import os
 class ClearDataFiles:
     def __init__(self):
         # Pasta de arquivo das conversas
-        self.__folder_files = 'file_folder/'
+        self.__folder_files = os.getenv('FOLDERS_FILES_CHAT')
         if not os.path.exists(self.__folder_files):
             os.mkdir(self.__folder_files)
 

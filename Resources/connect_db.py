@@ -1,11 +1,11 @@
-from searc_in_export_chat import ClearDataFiles
+from Resources.searc_in_export_chat import ClearDataFiles
 import sqlite3
 import os
 
 
 class ConnectDB:
     def __init__(self):
-        self.__file = 'wpp-search.db'
+        self.__file = os.getenv('FILE_DB')
 
         if not os.path.isfile(self.__file):
             conn = sqlite3.connect(self.__file)
@@ -36,8 +36,18 @@ class ConnectDB:
 
             conn.close()
 
-    def connect(self):
-        return sqlite3.connect(self.__file)
+
+class SQLiteCursor(ConnectDB):
+    def __init__(self):
+        super().__init__()
+        self.conn = sqlite3.connect(self.__file)
+
+    def __enter__(self):
+        return self.conn.cursor()
+
+    def __exit__(self, error: Exception, value: object, traceback: object):
+        self.conn.commit()
+        self.conn.close()
 
 
 class AddDataToDB(ConnectDB):
@@ -45,35 +55,27 @@ class AddDataToDB(ConnectDB):
         super().__init__()
 
     def init_add_file(self, id_uuid: str, path: str, file: str):
-        connect = self.connect()
-        cursor = connect.cursor()
+        with SQLiteCursor() as cursor:
+            # Insere os dados do nvoo arquivo
+            sql = "insert into files (uuid, path_name, name_file) values (?, ?, ?)"
+            datas = (id_uuid, path, file)
+            cursor.execute(sql, datas)
 
-        # Insere os dados do nvoo arquivo
-        sql = "insert into files (uuid, path_name, name_file) values (?, ?, ?)"
-        datas = (id_uuid, path, file)
-        cursor.execute(sql, datas)
+            # busca o id do novo arquivo criado
+            sql = "select id, uuid from files where uuid=?"
+            id_new_file = cursor.execute(sql, [id_uuid]).fetchall()
 
-        # busca o id do novo arquivo criado
-        sql = "select id, uuid from files where uuid=?"
-        id_new_file = cursor.execute(sql, [id_uuid]).fetchall()
-
-        connect.commit()
-        cursor.close()
-        print(id_new_file)
         # retorna o novo id
         self.__add_data(id_file=id_new_file[0][0], id_uuid=id_new_file[0][1])
 
-    def __add_data(self, id_file: int, id_uuid: str):
+    @classmethod
+    def __add_data(cls, id_file: int, id_uuid: str):
         data = ClearDataFiles().clear_data(file=id_uuid, id_file=id_file)
-        connect = self.connect()
-        cursor = connect.cursor()
 
-        sql = "insert into messages (file_id, phone, date, message) values (?, ?, ?, ?)"
+        with SQLiteCursor() as cursor:
+            sql = "insert into messages (file_id, phone, date, message) values (?, ?, ?, ?)"
 
-        cursor.executemany(sql, data)
-
-        connect.commit()
-        cursor.close()
+            cursor.executemany(sql, data)
 
 
 class FiltersDB(ConnectDB):

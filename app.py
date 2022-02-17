@@ -1,12 +1,20 @@
-from Resources.connect_db import AddDataToDB
+from Resources.searc_in_export_chat import ClearDataFiles
+from Resources.connect_db import AddDataToDB, ConnectDB
 from werkzeug.utils import secure_filename
 from flask import Flask, request
 import uuid
 import os
 
+
+def first_request():
+    ConnectDB()
+    ClearDataFiles()
+
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'file_folder/'
+app.config['UPLOAD_FOLDER'] = os.getenv('FOLDERS_FILES_CHAT')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
+app.before_first_request(first_request)
 
 
 @app.route('/')
