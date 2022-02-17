@@ -1,6 +1,8 @@
-from Resources.connect_db import AddDataToDB
+import json
+
+from Resources.connect_db import AddDataToDB, ConnectDB
 from werkzeug.utils import secure_filename
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import uuid
 import os
 
@@ -26,16 +28,25 @@ def upload_file():
 
         try:
             # Chama função que adiciona novo arquivo e dados
-            AddDataToDB().init_add_file(id_uuid=id_uuid, path=path, file=secure_filename(file.filename))
+            id_file = AddDataToDB().init_add_data(id_uuid=id_uuid, path=path, file=secure_filename(file.filename))
         except Exception as error:
             return f'error {error}', 500
 
-        return 'ok', 201
+        return {"id_file": id_file}, 201
 
 
-# @app.route('/list-numbers', methods=['GET'])
-# def extract_list_numbers():
-#     return jsonify(sec.list_phones()), 201
+@app.route('/list-numbers', methods=['GET'])
+def extract_list_numbers():
+    conn = ConnectDB().connect()
+    cursor = conn.cursor()
+
+    rows = cursor.execute('select distinct phone from messages')
+
+    # Desconpactando tuplas
+    list_numbers = [_[0] for _ in rows.fetchall()]
+
+    conn.close()
+    return jsonify(list_numbers)
 #
 #
 # @app.route("/filter", methods=['POST'])

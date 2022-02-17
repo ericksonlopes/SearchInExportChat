@@ -1,4 +1,4 @@
-from searc_in_export_chat import ClearDataFiles
+from Resources.searc_in_export_chat import ClearDataFiles
 import sqlite3
 import os
 
@@ -44,7 +44,7 @@ class AddDataToDB(ConnectDB):
     def __init__(self):
         super().__init__()
 
-    def init_add_file(self, id_uuid: str, path: str, file: str):
+    def init_add_data(self, id_uuid: str, path: str, file: str):
         connect = self.connect()
         cursor = connect.cursor()
 
@@ -59,12 +59,17 @@ class AddDataToDB(ConnectDB):
 
         connect.commit()
         cursor.close()
-        print(id_new_file)
-        # retorna o novo id
-        self.__add_data(id_file=id_new_file[0][0], id_uuid=id_new_file[0][1])
 
-    def __add_data(self, id_file: int, id_uuid: str):
+        # Salva as mensagens no banco
+        self.__add_messages(id_file=id_new_file[0][0], id_uuid=id_new_file[0][1])
+
+        # Retorna o uuid do arquivo
+        return id_new_file[0][0]
+
+    def __add_messages(self, id_file: int, id_uuid: str):
+        # Realiza a limpeza de dados e retorna os dados prontos
         data = ClearDataFiles().clear_data(file=id_uuid, id_file=id_file)
+
         connect = self.connect()
         cursor = connect.cursor()
 
