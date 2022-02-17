@@ -1,5 +1,5 @@
 from Resources.searc_in_export_chat import ClearDataFiles
-from Resources.connect_db import AddDataToDB, ConnectDB
+from Resources.connect_db import AddDataToDB, ConnectDB, SQLiteCursor
 from werkzeug.utils import secure_filename
 from flask import Flask, request
 import uuid
@@ -41,11 +41,15 @@ def upload_file():
         return 'ok', 201
 
 
-# @app.route('/list-numbers', methods=['GET'])
-# def extract_list_numbers():
-#     return jsonify(sec.list_phones()), 201
-#
-#
+@app.route('/list-numbers', methods=['GET'])
+def extract_list_numbers():
+    with SQLiteCursor() as cursor:
+        cursor.execute('select distinct phone from messages')
+        list_phones = [_[0] for _ in cursor.fetchall()]
+
+    return {'phone': list_phones}
+
+
 # @app.route("/filter", methods=['POST'])
 # def extract_message_number():
 #     # **request.args.to_dict()

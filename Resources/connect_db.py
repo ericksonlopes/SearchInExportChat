@@ -40,7 +40,7 @@ class ConnectDB:
 class SQLiteCursor(ConnectDB):
     def __init__(self):
         super().__init__()
-        self.conn = sqlite3.connect(self.__file)
+        self.conn = sqlite3.connect(os.getenv('FILE_DB'))
 
     def __enter__(self):
         return self.conn.cursor()
@@ -61,6 +61,7 @@ class AddDataToDB(ConnectDB):
             datas = (id_uuid, path, file)
             cursor.execute(sql, datas)
 
+        with SQLiteCursor() as cursor:
             # busca o id do novo arquivo criado
             sql = "select id, uuid from files where uuid=?"
             id_new_file = cursor.execute(sql, [id_uuid]).fetchall()

@@ -1,6 +1,7 @@
 # pastas
-file_folder
+files_folders
 word_cloud
+*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
