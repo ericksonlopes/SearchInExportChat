@@ -125,8 +125,7 @@ Saída:
 classe.word_cloud(date='2022-01-09T00:00:00.00')
 ```
 Saída:
-![](word_cloud/Grupo1bf6ea49-8f8c-11ec-b2f5-3c7c3f7809c7.png)
-
+![img](https://user-images.githubusercontent.com/62525983/154390872-19003660-386e-47d6-aef7-83f6d29a6660.png)
 
 
 ## Conta ocorrencia de palavras
