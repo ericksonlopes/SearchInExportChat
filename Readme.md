@@ -125,6 +125,7 @@ Saída:
 classe.word_cloud(date='2022-01-09T00:00:00.00')
 ```
 Saída:
+
 ![img](https://user-images.githubusercontent.com/62525983/154390872-19003660-386e-47d6-aef7-83f6d29a6660.png)
 
 
