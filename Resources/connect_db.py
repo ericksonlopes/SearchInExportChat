@@ -75,7 +75,6 @@ class AddDataToDB(ConnectDB):
 
         with SQLiteCursor() as cursor:
             sql = "insert into messages (file_id, phone, date, message) values (?, ?, ?, ?)"
-
             cursor.executemany(sql, data)
 
 
