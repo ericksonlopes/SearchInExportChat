@@ -1,5 +1,5 @@
-from Resources.searc_in_export_chat import ClearDataFiles
-from Resources.connect_db import AddDataToDB, ConnectDB, SQLiteCursor
+from Resources.sqlite_connector import ActionsSQlite, SQLiteCursor, SelectBuilder
+from Resources.searc_in_export_chat import DataFileCleaner
 from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 from datetime import datetime
@@ -8,8 +8,8 @@ import os
 
 
 def first_request():
-    ConnectDB()
-    ClearDataFiles()
+    ActionsSQlite()
+    DataFileCleaner()
 
 
 app = Flask(__name__)
@@ -34,8 +34,7 @@ def upload_file():
         file.save(path)
 
         try:
-            # Chama função que adiciona novo arquivo e dados
-            AddDataToDB().init_add_file(id_uuid=id_uuid, path=path, file=secure_filename(file.filename))
+            ActionsSQlite().load_data(id_uuid=id_uuid, path=path, file=secure_filename(file.filename))
         except Exception as error:
             return f'error {error}', 500
 
@@ -48,7 +47,7 @@ def extract_list_numbers():
         cursor.execute('select distinct phone from messages')
         list_phones = [_[0] for _ in cursor.fetchall()]
 
-    return jsonify({'phone': list_phones})
+    return jsonify({'phone': list_phones}), 200
 
 
 @app.route("/filter", methods=['POST'])
@@ -61,29 +60,29 @@ def extract_message_number():
     except Exception as error:
         return {'error': str(error)}
 
+    values = []
+    where = []
+    for key, value in dicio.items():
+        if value:
+            if key == 'phone':
+                where.append(f'{key}=?')
+                values.append(value)
+
+            if key == 'date':
+                values.append(datetime.strptime(value, '%Y-%m-%dT%H:%M:%S'))
+                where.append(f'{key}=?')
+
+            if key == 'message':
+                where.append(f"{key} like ?")
+                values.append('%' + value + '%')
+
     with SQLiteCursor() as cursor:
-        sql = "select * from messages"
-        data = []
+        sql = str(SelectBuilder().from_('messages').where(where).order_by('date'))
 
-        where = []
-        for key, value in dicio.items():
-            if value:
-                if key == 'phone':
-                    where.append(f' {key}=?')
-                    data.append(value)
-
-                if key == 'date':
-                    data.append(datetime.strptime(value, '%Y-%m-%dT%H:%M:%S'))
-                    where.append(f' {key}=?')
-
-                if key == 'message':
-                    where.append(f" {key} like ?")
-                    data.append('%'+value+'%')
-
-        if data:
-            cursor.execute(sql + ' where' + ' and '.join(where), tuple(data))
+        if values:
+            cursor.execute(sql, values)  # com where
         else:
-            cursor.execute(sql)
+            cursor.execute(sql)  # sem where
 
         result_filter = [{"phone": _[1], "date": _[2], "message": _[3]} for _ in cursor.fetchall()]
 

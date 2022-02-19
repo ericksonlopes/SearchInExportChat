@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 
-class ClearDataFiles:
+class DataFileCleaner:
     def __init__(self):
         # Pasta de arquivo das conversas
         self.__folder_files = os.getenv('FOLDERS_FILES_CHAT')
@@ -71,6 +71,6 @@ class ClearDataFiles:
 
 
 if __name__ == '__main__':
-    classe = ClearDataFiles().clear_data("conversa", 1)
+    classe = DataFileCleaner().clear_data("conversa", 1)
     numero = 'Paulo Mota'
     # [print(_[-1]) for _ in classe]
