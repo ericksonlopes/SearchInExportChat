@@ -26,7 +26,7 @@ source venv/bin/activate
 No Windows, execute:
 
 ```python
-venv\Scripts\activate.bat
+call venv\Scripts\activate.bat
 ```
 
 Com o ambiente virtual ativado, Instale as dependências (certifique-se de que esteja na mesma pasta que o arquivo).
