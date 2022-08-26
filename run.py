@@ -1,7 +1,7 @@
 from src.searc_in_export_chat import SearchInExportChat
 
 classe = SearchInExportChat("conversa.txt")
-numero = 'Paulo Mota'
+numero = '@erickson.lds'
 
 # Filtragem com todos os parametros
 # print(classe.filter_data(phone=numero, message='demorando', date='2022-01-16T00:00:00.00'))
@@ -11,6 +11,7 @@ numero = 'Paulo Mota'
 # [print(item.__dict__) for item in all_data]
 
 # # Conta quantidadede de mensagens que o numero passado
+# print(classe.filter_data(phone=numero))
 # print(classe.count_messages(phone='@erickson.lds'))
 # Conta quantas mensagens todos os numeros enviaram
 # print(classe.count_messages())
@@ -26,7 +27,7 @@ numero = 'Paulo Mota'
 # print(classe.list_phones())
 
 # Gera o word cloud
-print(classe.word_cloud(phone="Paulo Mota", date='2022-01-09T00:00:00.00'))
+# print(classe.word_cloud(phone="Paulo Mota", date='2022-01-09T00:00:00.00'))
 
 # Conta quantas vezes o numero determinado digitou especificas palavras
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
