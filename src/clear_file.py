@@ -26,6 +26,9 @@ class ClearDataFiles:
     def file(self) -> str:
         return self.__file
 
+    def __separete_file_path(self):
+        return os.path.abspath(self.__file)
+
     def __read_file(self) -> None:
         if not os.path.exists(self.__file):
             raise FileNotFoundError(f'File {self.__file} not found')
