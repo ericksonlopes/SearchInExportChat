@@ -1,7 +1,7 @@
-from src.searc_in_export_chat import SearchInExportChat
+from src.clear_file import ClearDataFiles
 
-classe = SearchInExportChat("conversa.txt")
-numero = '@erickson.lds'
+# classe = SearchInExportChat("test_group.txt")
+# numero = '@erickson.lds'
 
 # Filtragem com todos os parametros
 # print(classe.filter_data(phone=numero, message='demorando', date='2022-01-16T00:00:00.00'))
@@ -31,3 +31,20 @@ numero = '@erickson.lds'
 
 # Conta quantas vezes o numero determinado digitou especificas palavras
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
+
+if __name__ == '__main__':
+    import pandas as pd
+
+    data = ClearDataFiles('file_folder/conversa.txt')
+
+    messages = data.messages
+    # info_messages = data.info_messages
+
+    df_messages = pd.DataFrame(data.messages)
+
+    print(df_messages['phone'].value_counts().head(10))
+
+    # primeira e ultima mensagem
+    # print(min(df_messages.date.values))
+    # print(max(df_messages.date.values))
+    # print(df_messages.value_counts('phone'))

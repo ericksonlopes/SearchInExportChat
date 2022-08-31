@@ -1,6 +1,5 @@
 # pastas
 file_folder
-word_cloud
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -133,3 +132,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+!/tests/coverage_html_report/

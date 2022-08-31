@@ -1,3 +1,4 @@
+import os
 import re
 from datetime import datetime
 from typing import List
@@ -6,12 +7,30 @@ from src.models import MessageModel, InfoMessageModel
 
 
 class ClearDataFiles:
-    def __init__(self, file: str):
-        self.__file = file
+    def __init__(self, pathfile: str):
+        self.__file = pathfile
         self.__messages: List[MessageModel] = []
         self.__info_messages: List[InfoMessageModel] = []
 
-        with open(file, encoding='utf-8') as file:
+        self.__read_file()
+
+    @property
+    def messages(self) -> List[MessageModel]:
+        return self.__messages
+
+    @property
+    def info_messages(self) -> List[InfoMessageModel]:
+        return self.__info_messages
+
+    @property
+    def file(self) -> str:
+        return self.__file
+
+    def __read_file(self) -> None:
+        if not os.path.exists(self.__file):
+            raise FileNotFoundError(f'File {self.__file} not found')
+
+        with open(self.__file, encoding='utf-8') as file:
             for item in file.readlines():
                 find = re.findall(r'(\d{2}/\d{2}/\d{4} \d{2}:\d{2}) - (.*?): (.*)', item, re.MULTILINE)
 
@@ -30,30 +49,3 @@ class ClearDataFiles:
                     continue
 
                 self.messages[-1].message += f" {' '.join(item.split())}"
-
-    @property
-    def messages(self) -> List[MessageModel]:
-        return self.__messages
-
-    @property
-    def info_messages(self) -> List[InfoMessageModel]:
-        return self.__info_messages
-
-
-if __name__ == '__main__':
-    import pandas as pd
-    data = ClearDataFiles('conversa.txt')
-
-    messages = data.messages
-    # info_messages = data.info_messages
-
-    df_messages = pd.DataFrame(data.messages)
-
-    print(df_messages['phone'].value_counts().head(10))
-
-    # primeira e ultima mensagem
-    # print(min(df_messages.date.values))
-    # print(max(df_messages.date.values))
-    # print(df_messages.value_counts('phone'))
-
-
