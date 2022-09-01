@@ -26,14 +26,14 @@ class ClearDataFiles:
     def file(self) -> str:
         return self.__file
 
-    def __separete_file_path(self):
+    def __get_absolute_path_file(self):
         return os.path.abspath(self.__file)
 
     def __read_file(self) -> None:
         if not os.path.exists(self.__file):
             raise FileNotFoundError(f'File {self.__file} not found')
 
-        with open(self.__file, encoding='utf-8') as file:
+        with open(self.__get_absolute_path_file(), encoding='utf-8') as file:
             for item in file.readlines():
                 find = re.findall(r'(\d{2}/\d{2}/\d{4} \d{2}:\d{2}) - (.*?): (.*)', item, re.MULTILINE)
 
