@@ -27,9 +27,12 @@ class ClearDataFiles:
         return self.__file
 
     def __get_absolute_path_file(self):
+        """get absolute path file"""
         return os.path.abspath(self.__file)
 
     def __read_file(self) -> None:
+        """perform file data cleanup"""
+
         if not os.path.exists(self.__file):
             raise FileNotFoundError(f'File {self.__file} not found')
 

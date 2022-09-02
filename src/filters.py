@@ -1,3 +1,20 @@
+from datetime import datetime
+from typing import List
+
+from src.clear_file import ClearDataFiles
+
+
+class FilterDataHandle(ClearDataFiles):
+    def __init__(self, pathfile: str):
+        super().__init__(pathfile)
+
+    def get_list_of_numbers(self, start_date: datetime = None, end_date: datetime = None) -> List[str]:
+        """Get list of numbers"""
+        if start_date and end_date:
+            return list(set([message.phone for message in self.messages if start_date <= message.date <= end_date]))
+
+        return list({item.phone for item in self.messages})
+
 # import os
 # import re
 # import string

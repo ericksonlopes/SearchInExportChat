@@ -1,4 +1,6 @@
-from src.clear_file import ClearDataFiles
+from datetime import datetime
+
+from src.filters import FilterDataHandle
 
 # classe = SearchInExportChat("test_group.txt")
 # numero = '@erickson.lds'
@@ -33,16 +35,16 @@ from src.clear_file import ClearDataFiles
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
 
 if __name__ == '__main__':
-    import pandas as pd
+    data = FilterDataHandle('tests/test_file_folder/test_group.txt')
 
-    data = ClearDataFiles('file_folder/conversa.txt')
-
-    messages = data.messages
+    start_date = datetime(2022, 6, 22)
+    end_date = datetime(2022, 6, 23)
+    print(data.get_list_of_numbers(start_date, end_date))
     # info_messages = data.info_messages
 
-    df_messages = pd.DataFrame(data.messages)
-
-    print(df_messages['phone'].value_counts().head(10))
+    # df_messages = pd.DataFrame(data.messages)
+    #
+    # print(df_messages['phone'].value_counts().head(10))
 
     # primeira e ultima mensagem
     # print(min(df_messages.date.values))
