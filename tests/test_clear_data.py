@@ -3,7 +3,7 @@ import pytest
 from src.clear_file import ClearDataFiles
 
 
-@pytest.mark.clear_data
+@pytest.mark.ClearDataFiles
 class TestClearDataFiles:
     def setup(self):
         self.file = 'tests/test_file_folder/test_group.txt'

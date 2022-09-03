@@ -6,7 +6,7 @@ from src.filters import FilterDataHandle
 from src.models import FilterMessagesModel
 
 
-@pytest.mark.filter_data
+@pytest.mark.FilterDataHandle
 class TestFilterDataHandle:
     def setup(self):
         self.file = 'tests/test_file_folder/test_group.txt'
@@ -20,16 +20,33 @@ class TestFilterDataHandle:
         end_date = datetime(2022, 6, 23)
         assert len(self.filter_data.get_list_of_numbers(start_date, end_date)) == 2
 
-    def test_filter_messages_model_with_phone(self):
+
+@pytest.mark.FilterMessagesModel
+class TestFilterMessagesModel:
+    def setup(self):
+        self.file = 'tests/test_file_folder/test_group.txt'
+        self.filter_data = FilterDataHandle(self.file)
+
+    def test_filter_with_phone(self):
         filter_message = FilterMessagesModel(phone='Paulo Cruz')
         assert len(filter_message(self.filter_data.messages)) == 4
 
-    def test_filter_messages_model_with_message(self):
+    def test_filter_with_message(self):
         filter_message = FilterMessagesModel(message='olá')
         assert len(filter_message(self.filter_data.messages)) == 3
 
-    def test_filter_messages_model_with_date(self):
+    def test_filter_with_dates(self):
         start_date = datetime(2022, 6, 22)
         end_date = datetime(2022, 6, 23)
         filter_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
         assert len(filter_message(self.filter_data.messages)) == 4
+
+    def test_filter_with_all(self):
+        start_date = datetime(2022, 6, 22)
+        end_date = datetime(2022, 6, 23)
+        filter_message = FilterMessagesModel(
+            phone='@erickson',
+            message='olá', start_date=start_date,
+            end_date=end_date)
+
+        assert len(filter_message(self.filter_data.messages)) == 1
