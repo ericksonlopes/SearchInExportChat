@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List
 
 from src.clear_file import ClearDataFiles
+from src.models import FilterMessagesModel, MessageModel
 
 
 class FilterDataHandle(ClearDataFiles):
@@ -11,7 +12,7 @@ class FilterDataHandle(ClearDataFiles):
     def get_list_of_numbers(self, start_date: datetime = None, end_date: datetime = None) -> List[str]:
         """Get list of numbers"""
         if start_date and end_date:
-            return list(set([message.phone for message in self.messages if start_date <= message.date <= end_date]))
+            return list({message.phone for message in self.messages if start_date <= message.date <= end_date})
 
         return list({item.phone for item in self.messages})
 

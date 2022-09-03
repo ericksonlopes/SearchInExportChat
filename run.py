@@ -35,11 +35,23 @@ from src.filters import FilterDataHandle
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
 
 if __name__ == '__main__':
+    from src.models import FilterMessagesModel
     data = FilterDataHandle('tests/test_file_folder/test_group.txt')
 
     start_date = datetime(2022, 6, 22)
     end_date = datetime(2022, 6, 23)
     print(data.get_list_of_numbers(start_date, end_date))
+
+    filter_message = FilterMessagesModel(phone='Paulo Cruz')
+    print(len(filter_message(data.messages)))
+
+    filter_message = FilterMessagesModel(message='Olá')
+    print(len(filter_message(data.messages)))
+
+    start_date = datetime(2022, 6, 22)
+    end_date = datetime(2022, 6, 23)
+    filter_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
+    print(filter_message(data.messages))
     # info_messages = data.info_messages
 
     # df_messages = pd.DataFrame(data.messages)

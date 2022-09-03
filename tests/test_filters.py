@@ -3,6 +3,7 @@ from datetime import datetime
 import pytest
 
 from src.filters import FilterDataHandle
+from src.models import FilterMessagesModel
 
 
 @pytest.mark.filter_data
@@ -18,3 +19,17 @@ class TestFilterDataHandle:
         start_date = datetime(2022, 6, 22)
         end_date = datetime(2022, 6, 23)
         assert len(self.filter_data.get_list_of_numbers(start_date, end_date)) == 2
+
+    def test_filter_messages_model_with_phone(self):
+        filter_message = FilterMessagesModel(phone='Paulo Cruz')
+        assert len(filter_message(self.filter_data.messages)) == 4
+
+    def test_filter_messages_model_with_message(self):
+        filter_message = FilterMessagesModel(message='olá')
+        assert len(filter_message(self.filter_data.messages)) == 3
+
+    def test_filter_messages_model_with_date(self):
+        start_date = datetime(2022, 6, 22)
+        end_date = datetime(2022, 6, 23)
+        filter_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
+        assert len(filter_message(self.filter_data.messages)) == 4

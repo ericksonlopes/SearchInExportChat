@@ -1,5 +1,11 @@
 [run]
 omit =
+   src/models/data/*
+   src\__init__.py
+   src\models\filters\__init__.py
+   src\models\__init__.py
+
+   # retirar
    # src/models/*
 
 [report]
