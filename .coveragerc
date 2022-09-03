@@ -1,6 +1,6 @@
 [run]
 omit =
-   // src/models/*
+   # src/models/*
 
 [report]
 exclude_lines =
