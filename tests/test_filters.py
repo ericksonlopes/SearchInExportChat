@@ -1,8 +1,11 @@
 from datetime import datetime
 
+import pytest
+
 from src.filters import FilterDataHandle
 
 
+@pytest.mark.filter_data
 class TestFilterDataHandle:
     def setup(self):
         self.file = 'tests/test_file_folder/test_group.txt'
