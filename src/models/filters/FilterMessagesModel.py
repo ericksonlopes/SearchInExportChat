@@ -14,14 +14,15 @@ class FilterMessagesModel:
     message: str = None
 
     def __call__(self, messages: List[MessageModel]) -> List[MessageModel]:
+        list_return = []
         """Filter messages by phone, date and message."""
         if self.phone is not None:
-            messages = filter(lambda message: message.phone == self.phone, messages)
+            list_return = filter(lambda message: message.phone == self.phone, messages)
 
         if (self.start_date and self.end_date) is not None:
-            messages = filter(lambda message: self.start_date <= message.date <= self.end_date, messages)
+            list_return = filter(lambda message: self.start_date <= message.date <= self.end_date, messages)
 
         if self.message is not None:
-            messages = filter(lambda message: self.message.upper() in message.message.upper(), messages)
+            list_return = filter(lambda message: self.message.upper() in message.message.upper(), messages)
 
-        return list(messages)
+        return list(list_return)
