@@ -1,6 +1,6 @@
 # Instalação 🛠️ 
 
-Versão do python utilizada no projeto  ![Python 3](https://img.shields.io/badge/python-3.8.10-blue.svg) ![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?&logo=Pytest&logoColor=FFFFFF)  ![Pandas](https://img.shields.io/badge/-pandas-150458?&logo=pandas&logoColor=FFFFFF)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/rich/10.11.0)](https://www.python.org/download/) ![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?&logo=Pytest&logoColor=FFFFFF)  ![Pandas](https://img.shields.io/badge/-pandas-150458?&logo=pandas&logoColor=FFFFFF)
 
 Faça o clone do projeto.
 
