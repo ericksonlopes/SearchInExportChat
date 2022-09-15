@@ -12,5 +12,5 @@ class MessageDto:
     message: str = None
     list_phone: List[str] = None
 
-    def __call__(self, *args, **kwargs):
-        return dict(self.__dict__)
+    def __call__(self, *args, **kwargs) -> dict:
+        return self.__dict__
