@@ -2,27 +2,26 @@ import datetime
 from dataclasses import dataclass
 from typing import List
 
-from src.models import MessageModel
+from src.models import MessageModel, MessageDto
 
 
 @dataclass
-class FilterMessagesModel:
+class FilterMessagesModel(MessageDto):
     """Filter messages by type and severity."""
-    phone: str = None
-    start_date: datetime = None
-    end_date: datetime = None
-    message: str = None
 
     def __call__(self, messages: List[MessageModel]) -> List[MessageModel]:
-        list_return = []
-        """Filter messages by phone, date and message."""
+        """Filter messages"""
+
         if self.phone is not None:
-            list_return = filter(lambda message: message.phone == self.phone, messages)
+            messages = filter(lambda message: message.phone == self.phone, messages)
 
         if (self.start_date and self.end_date) is not None:
-            list_return = filter(lambda message: self.start_date <= message.date <= self.end_date, messages)
+            messages = filter(lambda message: self.start_date <= message.date <= self.end_date, messages)
 
         if self.message is not None:
-            list_return = filter(lambda message: self.message.upper() in message.message.upper(), messages)
+            messages = filter(lambda message: self.message.upper() in message.message.upper(), messages)
 
-        return list(list_return)
+        if self.list_phone is not None:
+            messages = filter(lambda message: message.phone in self.list_phone, messages)
+
+        return list(messages)

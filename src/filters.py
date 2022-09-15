@@ -1,8 +1,10 @@
+from collections import Counter
 from datetime import datetime
 from typing import List
 
 from src.clear_file import ClearDataFiles
-from src.models import FilterMessagesModel, MessageModel
+from src.models import MessageDto, FilterMessagesModel
+from src.models.data.NumberOfMessagesModel import NumberOfMessagesModel
 
 
 class FilterDataHandle(ClearDataFiles):
@@ -16,11 +18,31 @@ class FilterDataHandle(ClearDataFiles):
 
         return list({item.phone for item in self.messages})
 
+    def count_messages(self, message_dto: MessageDto = MessageDto()) -> List[NumberOfMessagesModel]:
+        """Count messages"""
+
+        # create filter
+        filter_message = FilterMessagesModel(**message_dto())
+
+        # filter messages
+        messages_filter = filter_message(self.messages)
+
+        # Perform message count
+        messages = Counter([item.phone for item in messages_filter])
+
+        # Arrange in ascending order
+        messages_sorted = sorted(messages.items(), key=lambda item: item[1], reverse=True)
+
+        # Return list of objects
+        list_count = list(map(lambda item: NumberOfMessagesModel(phone=item[0], quantity=item[1]), messages_sorted))
+
+        return list_count
+
 # import os
 # import re
 # import string
 # import uuid
-# from collections import Counter
+
 # from typing import List
 #
 # import matplotlib.pyplot as plt

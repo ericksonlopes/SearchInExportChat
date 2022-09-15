@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from src.filters import FilterDataHandle
-from src.models import FilterMessagesModel
+from src.models import FilterMessagesModel, MessageModel
 
 
 @pytest.mark.FilterDataHandle
@@ -19,6 +19,9 @@ class TestFilterDataHandle:
         start_date = datetime(2022, 6, 22)
         end_date = datetime(2022, 6, 23)
         assert len(self.filter_data.get_list_of_numbers(start_date, end_date)) == 2
+
+    def test_count_messages(self):
+        assert len(self.filter_data.count_messages()) == 4
 
 
 @pytest.mark.FilterMessagesModel
@@ -41,12 +44,17 @@ class TestFilterMessagesModel:
         filter_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
         assert len(filter_message(self.filter_data.messages)) == 4
 
+    def test_filter_with_list_phone(self):
+        filter_message = FilterMessagesModel(list_phone=['@erickson', 'Paulo Cruz'])
+        assert len(filter_message(self.filter_data.messages)) == 8
+
     def test_filter_with_all(self):
         start_date = datetime(2022, 6, 22)
         end_date = datetime(2022, 6, 23)
         filter_message = FilterMessagesModel(
             phone='@erickson',
             message='olá', start_date=start_date,
-            end_date=end_date)
-
+            end_date=end_date,
+            list_phone=['@erickson'])
+        assert isinstance(*filter_message(self.filter_data.messages), MessageModel)
         assert len(filter_message(self.filter_data.messages)) == 1

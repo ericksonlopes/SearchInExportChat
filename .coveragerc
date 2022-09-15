@@ -4,7 +4,7 @@ omit =
    src\__init__.py
    src\models\filters\__init__.py
    src\models\__init__.py
-
+   src\models\dto\*
    # retirar
    # src/models/*
 
