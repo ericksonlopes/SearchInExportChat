@@ -3,9 +3,18 @@ omit =
    src\__init__.py
    src/__init__.py
 
+   src/models/__init__.py
+   src\models\__init__.py
+
+   src/models/filters/__init__.py
+   src\models\filters\__init__.py
+
    # comentario
-   src/models/*
-   src\models\*
+   src/models/data/*
+   src\models\data\*
+
+   src/models/dto/*
+   src\models\dto\*
 
 [report]
 exclude_lines =
