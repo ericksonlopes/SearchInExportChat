@@ -1,10 +1,10 @@
+import re
 from collections import Counter
 from datetime import datetime
 from typing import List
 
 from src.clear_file import ClearDataFiles
-from src.models import MessageDto, FilterMessagesModel
-from src.models.data.NumberOfMessagesModel import NumberOfMessagesModel
+from src.models import MessageDto, FilterMessagesModel, NumberOfMessagesModel, PhoneLinksModel
 
 
 class FilterDataHandle(ClearDataFiles):
@@ -13,12 +13,12 @@ class FilterDataHandle(ClearDataFiles):
 
     def get_list_of_numbers(self, start_date: datetime = None, end_date: datetime = None) -> List[str]:
         """Get list of numbers"""
-        if start_date and end_date:
-            return list({message.phone for message in self.messages if start_date <= message.date <= end_date})
+        filtro_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
+        messages = filtro_message(self.messages)
 
-        return list({item.phone for item in self.messages})
+        return list({message.phone for message in messages})
 
-    def count_messages(self, message_dto: MessageDto = MessageDto()) -> List[NumberOfMessagesModel]:
+    def get_message_count_by_phone(self, message_dto: MessageDto = MessageDto()) -> List[NumberOfMessagesModel]:
         """Count messages"""
 
         # create filter
@@ -28,87 +28,30 @@ class FilterDataHandle(ClearDataFiles):
         messages_filter = filter_message(self.messages)
 
         # Perform message count
-        messages = Counter([item.phone for item in messages_filter])
+        messages = Counter(message.phone for message in messages_filter)
 
         # Arrange in ascending order
-        messages_sorted = sorted(messages.items(), key=lambda item: item[1], reverse=True)
+        messages_sorted = sorted(messages.items(), key=lambda message: message[1], reverse=True)
 
         # Return list of objects
-        list_count = list(map(lambda item: NumberOfMessagesModel(phone=item[0], quantity=item[1]), messages_sorted))
+        list_count = list(map(lambda _: NumberOfMessagesModel(phone=_[0], quantity=_[1]), messages_sorted))
 
         return list_count
 
-# import os
-# import re
-# import string
-# import uuid
+    def extract_links(self, message_dto: MessageDto = MessageDto()) -> List[PhoneLinksModel]:
+        """Extract links from messages"""
+        filter_message = FilterMessagesModel(**message_dto())
+        messages = filter_message(self.messages)
 
-# from typing import List
-#
-# import matplotlib.pyplot as plt
-# from wordcloud import WordCloud
-#
-# from src.clear_file import ClearDataFiles
-# from src.helpers.stop_words import stopwordsnltk
-# from src.models import NumberOfMessagesModel, WordQuantityModel
-#
-#
-# class SearchInExportChat(ClearDataFiles):
-#     def __init__(self, file: str):
-#         super().__init__(file)
-#         self.__type_chat: str
-#
-#         # Verifica se é uma conversa ou grupo
-#         if len(self.list_phones()) > 2:
-#             self.__type_chat = 'grupo'
-#         else:
-#             self.__type_chat = 'chat'
-#
-#     def list_phones(self, date: str = None) -> list:
-#         """
-#         Função retorna todos os números que enviaram mensagem na conversa
-#         """
-#
-#         list_phones = list({item.phone for item in self.filter_data(date=date)})
-#
-#         return list_phones
-#
-#     def count_messages(self, phone: str = None, date: str = None) -> List[NumberOfMessagesModel]:
-#         """
-#         Retorna a quantidade de mensagens enviadas por um número
-#         :param date: Recebe Data para filtragem
-#         :type date: string
-#         :param phone: Recebe o número que deve buscar
-#         :type phone: string
-#         :return:
-#         """
-#         list_return = []
-#         if phone:
-#             list_return.append(NumberOfMessagesModel(phone, len(self.filter_data(phone=phone, date=date))))
-#
-#         else:
-#             [list_return.append(NumberOfMessagesModel(number, len(self.filter_data(phone=phone, date=date))))
-#              for number in self.list_phones(date=date)]
-#
-#         return sorted(list_return, key=lambda k: k.amount, reverse=True)
-#
-#     def extract_links(self, phone: str = None, date: str = None) -> List[str]:
-#         """
-#         Extrai todas as links
-#
-#         :param phone: str
-#         :param date: str
-#         :return:
-#         """
-#         str_message = ' '.join([_.message for _ in self.filter_data(phone=phone, date=date)])
-#
-#         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(" \
-#                 r")<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-#
-#         url = re.findall(regex, str_message)
-#
-#         return [x[0] for x in url]
-#
+        list_phone_link: List[PhoneLinksModel] = []
+
+        for message in messages:
+            links = re.findall(r'(https?://\S+)', message.message)
+            if links:
+                list_phone_link.append(PhoneLinksModel(phone=message.phone, links=links))
+
+        return list_phone_link
+
 #     def word_occurrence_counter(self, phone: str = None, remove_punctuation: bool = False, date: str = None):
 #         """
 #         Retorna uma lista de ocorrencias de todas as palavras enviadas pelo número especificado

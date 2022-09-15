@@ -75,9 +75,10 @@ Saída:
 ```
 
 ## Contador de mensagens
+
 ```python
 # Conta quantidadede de mensagens que o numero passado
-print(classe.count_messages(phone='@erickson.lds'))
+print(classe.get_message_count_by_phone())
 ```
 Saída:
 ```python
@@ -88,12 +89,13 @@ Saída:
 ```
 
 ## Contador de mensagens
+
 ```python
  # Conta quantidadede de mensagens que o numero passado com todos os filtros
-print(classe.count_messages(phone='@erickson.lds', date='2022-01-16T00:00:00.00'))
+print(classe.get_message_count_by_phone())
 
 # Conta quantas mensagens todos os numeros enviaram
-print(classe.count_messages())
+print(classe.get_message_count_by_phone())
 ```
 Saída:
 ```python

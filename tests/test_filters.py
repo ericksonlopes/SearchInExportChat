@@ -21,7 +21,10 @@ class TestFilterDataHandle:
         assert len(self.filter_data.get_list_of_numbers(start_date, end_date)) == 2
 
     def test_count_messages(self):
-        assert len(self.filter_data.count_messages()) == 4
+        assert len(self.filter_data.get_message_count_by_phone()) == 4
+
+    def test_extract_links(self):
+        assert len(self.filter_data.extract_links()) == 1
 
 
 @pytest.mark.FilterMessagesModel

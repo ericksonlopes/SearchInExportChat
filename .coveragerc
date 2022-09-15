@@ -1,12 +1,11 @@
 [run]
 omit =
-   src/models/data/*
    src\__init__.py
-   src\models\filters\__init__.py
-   src\models\__init__.py
-   src\models\dto\*
-   # retirar
-   # src/models/*
+   src/__init__.py
+
+   # comentario
+   src/models/*
+   src\models\*
 
 [report]
 exclude_lines =

@@ -48,11 +48,12 @@ if __name__ == '__main__':
     #
     # print(filter_message(data.messages))
 
-    data = FilterDataHandle('file_folder/ruby.txt')
+    data = FilterDataHandle('file_folder/conversa.txt')
     # data = FilterDataHandle('tests/test_file_folder/test_group.txt')
+    print(data.extract_links())
 
-    start_date = datetime(2022, 6, 22)
-    end_date = datetime(2022, 6, 23)
+    # start_date = datetime(2022, 6, 22)
+    # end_date = datetime(2022, 6, 23)
 
     # filter_message = FilterMessagesModel(
     #     phone='@erickson',
