@@ -11,6 +11,19 @@ class FilterDataHandle(ClearDataFiles):
     def __init__(self, pathfile: str):
         super().__init__(pathfile)
 
+    @property
+    def group_or_privaty(self) -> str:
+        """Return group or private"""
+        len_phones = len(self.get_list_of_numbers())
+
+        if len_phones > 2:
+            return 'group'
+
+        elif len_phones == 2:
+            return 'private'
+        else:
+            return 'unknown'
+
     def get_list_of_numbers(self, start_date: datetime = None, end_date: datetime = None) -> List[str]:
         """Get list of numbers"""
         filtro_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
@@ -47,8 +60,14 @@ class FilterDataHandle(ClearDataFiles):
 
         for message in messages:
             links = re.findall(r'(https?://\S+)', message.message)
+
             if links:
-                list_phone_link.append(PhoneLinksModel(phone=message.phone, links=links))
+                for lista_phone in list_phone_link:
+                    if lista_phone.phone == message.phone:
+                        [lista_phone.links.append(x) for x in links]
+                        break
+                else:
+                    list_phone_link.append(PhoneLinksModel(phone=message.phone, links=links))
 
         return list_phone_link
 

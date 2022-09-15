@@ -26,6 +26,9 @@ class TestFilterDataHandle:
     def test_extract_links(self):
         assert len(self.filter_data.extract_links()) == 1
 
+    def test_group(self):
+        assert self.filter_data.group_or_privaty == 'group' or 'private'
+
 
 @pytest.mark.FilterMessagesModel
 class TestFilterMessagesModel:

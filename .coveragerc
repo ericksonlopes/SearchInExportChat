@@ -18,7 +18,12 @@ omit =
 
 [report]
 exclude_lines =
-    if __name__ == .__main__.:
+    elif len_phones == 2:
+        return 'private'
+
+    return 'unknown'
+
+    if lista_phone.phone == message.phone:
 
 [html]
 directory = ./tests/coverage_html_report

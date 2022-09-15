@@ -50,6 +50,7 @@ if __name__ == '__main__':
 
     data = FilterDataHandle('file_folder/conversa.txt')
     # data = FilterDataHandle('tests/test_file_folder/test_group.txt')
+    print([item.phone for item in data.extract_links()])
     print(data.extract_links())
 
     # start_date = datetime(2022, 6, 22)
