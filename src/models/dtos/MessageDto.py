@@ -5,7 +5,7 @@ from typing import List
 
 @dataclass
 class MessageDto:
-    """Messages data transfer object."""
+    """Messages datas transfer object."""
     phone: str = None
     start_date: datetime = None
     end_date: datetime = None

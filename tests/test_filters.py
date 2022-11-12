@@ -8,7 +8,7 @@ from src.models import FilterMessagesModel, MessageModel
 
 @pytest.mark.FilterDataHandle
 class TestFilterDataHandle:
-    def setup(self):
+    def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
         self.filter_data = FilterDataHandle(self.file)
 
@@ -32,7 +32,7 @@ class TestFilterDataHandle:
 
 @pytest.mark.FilterMessagesModel
 class TestFilterMessagesModel:
-    def setup(self):
+    def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
         self.filter_data = FilterDataHandle(self.file)
 

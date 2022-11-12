@@ -61,7 +61,7 @@ Saída:
 
 ## Lista todos os contatos
 ```python
-# Lista os numeros que são encontrado na data determinada
+# Lista os numeros que são encontrado na datas determinada
 print(classe.list_phones(date='2022-01-16T00:00:00.00'))
 # Lista todos os numeros encontrado na conversa
 print(classe.list_phones())

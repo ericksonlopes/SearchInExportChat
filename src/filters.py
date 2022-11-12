@@ -3,72 +3,102 @@ from collections import Counter
 from datetime import datetime
 from typing import List
 
+from loguru import logger
+
+from config import setup_logger
 from src.clear_file import ClearDataFiles
 from src.models import MessageDto, FilterMessagesModel, NumberOfMessagesModel, PhoneLinksModel
 
 
 class FilterDataHandle(ClearDataFiles):
+
     def __init__(self, pathfile: str):
         super().__init__(pathfile)
+        setup_logger()
 
     @property
     def group_or_privaty(self) -> str:
         """Return group or private"""
-        len_phones = len(self.get_list_of_numbers())
+        try:
+            len_phones = len(self.get_list_of_numbers())
+        except Exception as error:
+            logger.error(error)
+            raise error
 
+        result: str
         if len_phones > 2:
-            return 'group'
+            result = 'group'
 
         elif len_phones == 2:
-            return 'private'
+            result = 'private'
         else:
-            return 'unknown'
+            result = 'unknown'
+
+        logger.info(f'{self.file} is {result}')
+
+        return result
 
     def get_list_of_numbers(self, start_date: datetime = None, end_date: datetime = None) -> List[str]:
         """Get list of numbers"""
-        filtro_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
-        messages = filtro_message(self.messages)
+        try:
+            filtro_message = FilterMessagesModel(start_date=start_date, end_date=end_date)
+            messages = filtro_message(self.messages)
 
+        except Exception as error:
+            logger.error(error)
+            raise error
+
+        logger.info(f'Successfully extracted {len(messages)} messages')
         return list({message.phone for message in messages})
 
     def get_message_count_by_phone(self, message_dto: MessageDto = MessageDto()) -> List[NumberOfMessagesModel]:
         """Count messages"""
 
-        # create filter
-        filter_message = FilterMessagesModel(**message_dto())
+        try:
+            # create filter
+            filter_message = FilterMessagesModel(**message_dto())
 
-        # filter messages
-        messages_filter = filter_message(self.messages)
+            # filter messages
+            messages_filter = filter_message(self.messages)
 
-        # Perform message count
-        messages = Counter(message.phone for message in messages_filter)
+            # Perform message count
+            messages = Counter(message.phone for message in messages_filter)
 
-        # Arrange in ascending order
-        messages_sorted = sorted(messages.items(), key=lambda message: message[1], reverse=True)
+            # Arrange in ascending order
+            messages_sorted = sorted(messages.items(), key=lambda message: message[1], reverse=True)
 
-        # Return list of objects
-        list_count = list(map(lambda _: NumberOfMessagesModel(phone=_[0], quantity=_[1]), messages_sorted))
+            # Return list of objects
+            list_count = list(map(lambda _: NumberOfMessagesModel(phone=_[0], quantity=_[1]), messages_sorted))
+        except Exception as error:
+            logger.error(error)
+            raise error
 
+        logger.info(f'Successfully counted {len(list_count)} messages')
         return list_count
 
     def extract_links(self, message_dto: MessageDto = MessageDto()) -> List[PhoneLinksModel]:
         """Extract links from messages"""
-        filter_message = FilterMessagesModel(**message_dto())
-        messages = filter_message(self.messages)
+        try:
+            filter_message = FilterMessagesModel(**message_dto())
+            messages = filter_message(self.messages)
 
-        list_phone_link: List[PhoneLinksModel] = []
+            list_phone_link: List[PhoneLinksModel] = []
 
-        for message in messages:
-            links = re.findall(r'(https?://\S+)', message.message)
+            for message in messages:
+                links = re.findall(r'(https?://\S+)', message.message)
 
-            if links:
-                for lista_phone in list_phone_link:
-                    if lista_phone.phone == message.phone:
-                        [lista_phone.links.append(x) for x in links]
-                        break
-                else:
-                    list_phone_link.append(PhoneLinksModel(phone=message.phone, links=links))
+                if links:
+                    for lista_phone in list_phone_link:
+                        if lista_phone.phone == message.phone:
+                            [lista_phone.links.append(x) for x in links]
+                            break
+                    else:
+                        list_phone_link.append(PhoneLinksModel(phone=message.phone, links=links))
+        except Exception as error:
+            logger.error(error)
+            raise error
 
+        logger.info(f'Successfully  {len(list_phone_link)}')
         return list_phone_link
 
 #     def word_occurrence_counter(self, phone: str = None, remove_punctuation: bool = False, date: str = None):

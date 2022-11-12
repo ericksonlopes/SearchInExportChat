@@ -1,11 +1,13 @@
-import pytest
+import sys
 
+import pytest
+from loguru import logger
 from src.clear_file import ClearDataFiles
 
 
 @pytest.mark.ClearDataFiles
 class TestClearDataFiles:
-    def setup(self):
+    def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
         self.clear_data = ClearDataFiles(self.file)
 

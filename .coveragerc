@@ -21,9 +21,13 @@ exclude_lines =
     elif len_phones == 2:
         return 'private'
 
-    return 'unknown'
+    result = 'unknown'
 
     if lista_phone.phone == message.phone:
+
+    except Exception as error:
+        logger.error(error)
+        raise error
 
 [html]
 directory = ./tests/coverage_html_report
