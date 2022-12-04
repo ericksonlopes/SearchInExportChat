@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from src.add_messages import AddMessages
 from src.filters import FilterDataHandle
 
 # classe = SearchInExportChat("test_group.txt")
@@ -35,19 +36,21 @@ from src.filters import FilterDataHandle
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
 
 if __name__ == '__main__':
-    from src.models import FilterMessagesModel, MessageDto
+    AddMessages(pathfile='file_folder/conversa.txt')
 
-    datas = FilterDataHandle('tests/test_file_folder/test_group.txt')
+    # from src.models import FilterMessagesModel, MessageDto
+    #
+    # datas = FilterDataHandle('file_folder/conversa.txt')
+    #
+    # start_date = datetime(2022, 6, 22)
+    # end_date = datetime(2022, 6, 23)
+    #
+    # filter_message = FilterMessagesModel()
+    #
+    # for item in datas.messages:
+    #     print(item, end='\n')
 
-    start_date = datetime(2022, 6, 22)
-    end_date = datetime(2022, 6, 23)
-
-    filter_message = FilterMessagesModel(
-        phone='@erickson',
-        message='olá', start_date=start_date,
-        end_date=end_date)
-
-    print(filter_message(datas.messages))
+    # print(filter_message(datas.messages))
 
     # data = FilterDataHandle('file_folder/conversa.txt')
     # # datas = FilterDataHandle('tests/test_file_folder/test_group.txt')

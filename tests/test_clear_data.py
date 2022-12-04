@@ -2,22 +2,22 @@ import sys
 
 import pytest
 from loguru import logger
-from src.clear_file import ClearDataFiles
+from src.clear_file import ClearDataFile
 
 
-@pytest.mark.ClearDataFiles
+@pytest.mark.ClearDataFile
 class TestClearDataFiles:
     def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
-        self.clear_data = ClearDataFiles(self.file)
+        self.clear_data = ClearDataFile(self.file)
 
     def test_check_if_the_file_exists(self):
         with pytest.raises(FileNotFoundError):
-            ClearDataFiles('tests/test_group2.txt')
+            ClearDataFile('tests/test_group2.txt')
 
     def test_get_messages_ans_info_messages(self):
         assert len(self.clear_data.messages) == 10
         assert len(self.clear_data.info_messages) == 2
 
     def test_get_file(self):
-        assert self.clear_data.file == self.file
+        assert self.clear_data.path_file == self.file

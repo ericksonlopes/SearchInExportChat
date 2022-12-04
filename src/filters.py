@@ -6,11 +6,11 @@ from typing import List
 from loguru import logger
 
 from config import setup_logger
-from src.clear_file import ClearDataFiles
+from src.clear_file import ClearDataFile
 from src.models import MessageDto, FilterMessagesModel, NumberOfMessagesModel, PhoneLinksModel
 
 
-class FilterDataHandle(ClearDataFiles):
+class FilterDataHandle(ClearDataFile):
 
     def __init__(self, pathfile: str):
         super().__init__(pathfile)
@@ -34,7 +34,7 @@ class FilterDataHandle(ClearDataFiles):
         else:
             result = 'unknown'
 
-        logger.info(f'{self.file} is {result}')
+        logger.info(f'{self.path_file} is {result}')
 
         return result
 
