@@ -1,9 +1,11 @@
+from typing import List, Any
+
 from loguru import logger
 
 from config import setup_logger
 from sqlalchemy_config import Conector
 from src.clear_file import ClearDataFile
-from src.models import MessagesTable, InfoMessagesTable, FilesTable
+from src.models import InfoMessagesTable, FilesTable, MessagesTable
 
 
 class AddMessages(ClearDataFile):
@@ -34,24 +36,26 @@ class AddMessages(ClearDataFile):
             logger.error(error)
             raise error
 
+    def __adapter_that_adds_id_file(self, list_data: List[Any], type_model) -> map:
+        """adapter data"""
+        return map(lambda data: type_model(
+            **data.__dict__,
+            **{"id_file": self.__id_file}
+        ), list_data)
+
     def __add_message(self) -> None:
         """add messages in database"""
         try:
             with Conector() as session:
                 # add messages
-                session.add_all(map(lambda message: MessagesTable(
-                    phone=message.phone,
-                    message=message.message,
-                    id_file=self.__id_file
-                ), self.messages))
+                session.add_all(self.__adapter_that_adds_id_file(self.messages, MessagesTable))
 
                 # add info messages
-                session.add_all(map(lambda message: InfoMessagesTable(
-                    message=message.message,
-                    id_file=self.__id_file
-                ), self.info_messages))
+                session.add_all(self.__adapter_that_adds_id_file(self.info_messages, InfoMessagesTable))
 
-            logger.info(f'Successfully added messages to database ({len(self.messages)} itens)')
+            logger.info(f'Successfully added messages to database '
+                        f'({len(self.messages)} messages and {len(self.info_messages)} info messages)')
+
         except Exception as error:
             logger.error(error)
             raise error

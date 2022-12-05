@@ -16,6 +16,8 @@ class ClearDataFile:
         self.__name_file: str = self.__get_base_name_file()
         self.__messages: List[MessageModel] = []
         self.__info_messages: List[InfoMessageModel] = []
+
+        self.__verify_if_file_exists()
         self.__read_file()
 
     @property
@@ -46,12 +48,14 @@ class ClearDataFile:
         """get absolute path file"""
         return os.path.abspath(self.__path_file)
 
+    def __verify_if_file_exists(self) -> None:
+        """verify if file exists"""
+        if not os.path.exists(self.__path_file):
+            logger.warning(f'File {self.__path_file} not found')
+            raise FileNotFoundError(f'File {self.__path_file} not found')
+
     def __read_file(self) -> None:
         """perform file datas cleanup"""
-
-        if not os.path.exists(self.__path_file):
-            logger.error(f'File {self.__path_file} not found')
-            raise FileNotFoundError(f'File {self.__path_file} not found')
 
         try:
             with open(self.__get_absolute_path_file(), encoding='utf-8') as file:
