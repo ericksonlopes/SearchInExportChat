@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from src.add_messages import AddMessages
-from src.filters import FilterDataHandle
+from src.filters import FilterDataHandleBase
 
 # classe = SearchInExportChat("test_group.txt")
 # numero = '@erickson.lds'
@@ -36,7 +36,7 @@ from src.filters import FilterDataHandle
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
 
 if __name__ == '__main__':
-    AddMessages(pathfile='file_folder/Conversa do WhatsApp com Python.txt')
+    AddMessages(pathfile='file_folder/gabriela.txt')
 
     # from src.models import FilterMessagesModel, MessageDto
     #

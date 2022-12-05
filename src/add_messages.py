@@ -1,14 +1,15 @@
+from dataclasses import dataclass
 from typing import List, Any
 
 from loguru import logger
 
 from config import setup_logger
 from sqlalchemy_config import Conector
-from src.clear_file import ClearDataFile
+from src.clear_file import BaseClearDataFile
 from src.models import InfoMessagesTable, FilesTable, MessagesTable
 
 
-class AddMessages(ClearDataFile):
+class AddMessages(BaseClearDataFile):
     def __init__(self, pathfile: str):
         super().__init__(pathfile=pathfile)
         setup_logger()
@@ -36,7 +37,7 @@ class AddMessages(ClearDataFile):
             logger.error(error)
             raise error
 
-    def __adapter_that_adds_id_file(self, list_data: List[Any], type_model) -> map:
+    def __adapter_that_adds_id_file(self, list_data: List[Any], type_model: dataclass) -> map:
         """adapter data"""
         return map(lambda data: type_model(
             **data.__dict__,

@@ -6,11 +6,11 @@ from typing import List
 from loguru import logger
 
 from config import setup_logger
-from src.clear_file import ClearDataFile
+from src.clear_file import BaseClearDataFile
 from src.models import MessageDto, FilterMessagesModel, NumberOfMessagesModel, PhoneLinksModel
 
 
-class FilterDataHandle(ClearDataFile):
+class FilterDataHandleBase(BaseClearDataFile):
 
     def __init__(self, pathfile: str):
         super().__init__(pathfile)
