@@ -23,7 +23,8 @@ class AddMessages(ClearDataFile):
             with Conector() as session:
                 file = FilesTable(
                     name=self.name_file,
-                    path=self.path_file
+                    path=self.path_file,
+                    type=self.type_file
                 )
                 session.add(file)
                 session.flush()
