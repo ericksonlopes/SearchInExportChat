@@ -9,7 +9,7 @@ from config import setup_logger
 from src.models import MessageModel, InfoMessageModel
 
 
-class ClearDataFile:
+class BaseClearDataFile:
     def __init__(self, pathfile: str):
         setup_logger()
         self.__path_file: str = pathfile

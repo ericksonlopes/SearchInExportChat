@@ -2,15 +2,15 @@ from datetime import datetime
 
 import pytest
 
-from src.filters import FilterDataHandle
+from src.filters import FilterDataHandleBase
 from src.models import FilterMessagesModel, MessageModel
 
 
-@pytest.mark.FilterDataHandle
+@pytest.mark.FilterDataHandleBase
 class TestFilterDataHandle:
     def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
-        self.filter_data = FilterDataHandle(self.file)
+        self.filter_data = FilterDataHandleBase(self.file)
 
     def test_list_numbers(self):
         assert len(self.filter_data.get_list_of_numbers()) == 4
@@ -34,7 +34,7 @@ class TestFilterDataHandle:
 class TestFilterMessagesModel:
     def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
-        self.filter_data = FilterDataHandle(self.file)
+        self.filter_data = FilterDataHandleBase(self.file)
 
     def test_filter_with_phone(self):
         filter_message = FilterMessagesModel(phone='Paulo Cruz')

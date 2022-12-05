@@ -2,18 +2,18 @@ import sys
 
 import pytest
 from loguru import logger
-from src.clear_file import ClearDataFile
+from src.clear_file import BaseClearDataFile
 
 
-@pytest.mark.ClearDataFile
+@pytest.mark.BaseClearDataFile
 class TestClearDataFiles:
     def setup_method(self):
         self.file = 'tests/test_file_folder/test_group.txt'
-        self.clear_data = ClearDataFile(self.file)
+        self.clear_data = BaseClearDataFile(self.file)
 
     def test_check_if_the_file_exists(self):
         with pytest.raises(FileNotFoundError):
-            ClearDataFile('tests/test_group2.txt')
+            BaseClearDataFile('tests/test_group2.txt')
 
     def test_get_messages_ans_info_messages(self):
         assert len(self.clear_data.messages) == 10
