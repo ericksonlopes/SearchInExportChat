@@ -25,7 +25,7 @@ class AddMessages(BaseClearDataFile):
                 file = FilesTable(
                     name=self.name_file,
                     path=self.path_file,
-                    type=self.type_file
+                    # type=self.type_file
                 )
                 session.add(file)
                 session.flush()

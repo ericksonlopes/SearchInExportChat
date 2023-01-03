@@ -36,7 +36,7 @@ from src.filters import FilterDataHandleBase
 # print(classe.word_occurrence_counter(phone='Paulo Mota'))
 
 if __name__ == '__main__':
-    AddMessages(pathfile='file_folder/gabriela.txt')
+    AddMessages(pathfile='file_folder/conversa.txt')
 
     # from src.models import FilterMessagesModel, MessageDto
     #

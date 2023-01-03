@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from loguru import logger
@@ -5,7 +6,7 @@ from sqlalchemy import func
 
 from config import setup_logger
 from sqlalchemy_config import Conector
-from src.models import MessagesTable, DatesDto, NumberOfMessagesModel
+from src.models import MessagesTable, DatesDto, NumberOfMessagesModel, PhoneLinksModel
 
 
 class SearchInChatFilter:
@@ -45,7 +46,7 @@ class SearchInChatFilter:
                 if dates.end_date:
                     query = query.filter(MessagesTable.date <= dates.end_date)
 
-                phones = query.all()
+                phones = list({phone for phone, in query.all()})
 
                 logger.info(f'Successfully extracted {len(phones)} phone(s)')
 
@@ -53,7 +54,7 @@ class SearchInChatFilter:
             logger.error(error)
             raise error
 
-        return list({phone for phone, in phones})
+        return phones
 
     def get_message_count_by_phone(self, dates: DatesDto = DatesDto) -> List[NumberOfMessagesModel]:
         """Count messages"""
@@ -70,3 +71,54 @@ class SearchInChatFilter:
                                                                       func.count(MessagesTable.message))
 
             return list(map(lambda message: NumberOfMessagesModel(phone=message[0], quantity=message[1]), query))
+
+    # def extract_links(self, dates: DatesDto = DatesDto):
+    #     """Extract links"""
+    #     with Conector() as session:
+    #         query = session.query(MessagesTable).filter(MessagesTable.id_file == self.__id_file)
+    #
+    #         if dates.start_date:
+    #             query = query.filter(MessagesTable.date >= dates.start_date)
+    #
+    #         if dates.end_date:
+    #             query = query.filter(MessagesTable.date <= dates.end_date)
+    #
+    #         list_phone_link = {}
+    #
+    #         for message in query:
+    #             links = re.findall(r'(https?://\S+)', message.message)
+    #
+    #             list_phone_link = {}
+    #
+    #         logger.info(f'Successfully extracted {len(list_phone_link)} links')
+    #
+    #         print(list_phone_link)
+
+
+
+if __name__ == '__main__':
+    search = SearchInChatFilter(id_file=1)
+    # quantidade_numeros = search.get_message_count_by_phone()
+    # print(quantidade_numeros)
+    # print(search.get_list_of_numbers())
+    # print(search.group_or_privaty)
+    # search.extract_links()
+
+    # from dataclasses import dataclass
+    #
+    # @dataclass
+    # class PhoneLinksModel:
+    #     """PhoneLinksModel"""
+    #     phone: str
+    #     links: List[str]
+    #
+    #     def insert_link(self, links: List[str]):
+    #         self.links.extend(links)
+    #
+    #
+    # link = [PhoneLinksModel(phone='erickson', links=['123']), PhoneLinksModel(phone='gabriela', links=['456'])]
+    #
+    # for item in link:
+    #     if item.phone == 'erickson':
+    #         item.insert_link(['789'])
+    # print(link)

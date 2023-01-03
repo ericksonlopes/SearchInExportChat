@@ -11,5 +11,5 @@ class FilesTable(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     name = Column('name', String)
     path = Column('path', String)
-    type = Column('type', String(10))
+    # type = Column('type', String(10), nullable=True)
     created_at = Column('created_at', DateTime, default=datetime.now())
