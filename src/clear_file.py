@@ -81,7 +81,7 @@ class BaseClearDataFile:
                         self.info_messages.append(info_message)
                         continue
 
-                    self.messages[-1].message += f" {' '.join(line.split())}"
+                    self.messages[-1].concatenate(f" {' '.join(line.split())}")
             logger.info(f'Successfully read {self.__path_file}')
 
         except Exception as error:

@@ -8,3 +8,5 @@ class MessageModel:
     message: str
     date: datetime
 
+    def concatenate(self, message: str):
+        self.message += message
