@@ -10,6 +10,21 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
 
+    services:
+      postgres:
+        image: mysql:5.7
+        env:
+          DB_DRIVERNAME: mysql
+          DB_USER: test
+          DB_NAME: test
+          DB_PASSWORD: test
+          DB_PORT: 3306
+          DB_HOST: localhost
+          DB_ROOT_PASSWORD: root
+
+        ports:
+            - 3306:3306
+
     steps:
       - uses: actions/checkout@v3
 
