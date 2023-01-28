@@ -1,15 +1,21 @@
 import os
-
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import URL
 
-# Pasta atual
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+load_dotenv()
 
-# string de conexão com o banco
-connection_string = "sqlite:///" + os.path.join(BASE_DIR, 'data_wpp.db')
+connection_string = URL.create(
+    drivername=os.getenv('DB_DRIVERNAME'),
+    username=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    host=os.getenv('DB_HOST'),
+    database=os.getenv('DB_NAME'),
+    port=os.getenv('DB_PORT'),
+)
 
-# Declarando bases e colunas
+# Declarando bases e tabelas
 Base = declarative_base()
 from src.models.tables import *
 
