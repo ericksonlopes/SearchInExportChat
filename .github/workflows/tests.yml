@@ -14,7 +14,7 @@ jobs:
         python-version: [ "3.8" , "3.9", "3.10" ]
 
     services:
-      postgres:
+      mysql:
         image: mysql:5.7
         env:
           DB_USER: test
