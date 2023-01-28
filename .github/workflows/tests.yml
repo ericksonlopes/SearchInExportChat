@@ -1,6 +1,9 @@
 name: tests
 
-on: [push]
+on: [ push ]
+
+env:
+  DB_DRIVERNAME: mysql
 
 jobs:
   build:
@@ -8,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: [ "3.8.10" ]
 
     services:
       postgres:
         image: mysql:5.7
         env:
-          DB_DRIVERNAME: mysql
           DB_USER: test
           DB_NAME: test
           DB_PASSWORD: test
@@ -23,7 +25,7 @@ jobs:
           DB_ROOT_PASSWORD: root
 
         ports:
-            - 3306:3306
+          - 3306:3306
 
     steps:
       - uses: actions/checkout@v3
