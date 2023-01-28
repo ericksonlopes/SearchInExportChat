@@ -18,7 +18,7 @@ jobs:
         image: mysql:5.7
         env:
           DB_USER: test
-          DB_NAME: test
+          DB_NAME: unistest
           DB_PASSWORD: test
           DB_PORT: 3306
           DB_HOST: localhost
