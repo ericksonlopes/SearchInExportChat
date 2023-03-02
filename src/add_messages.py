@@ -3,16 +3,14 @@ from typing import List, Any
 
 from loguru import logger
 
-from config import setup_logger
-from sqlalchemy_config import Conector
+from config import Conector, Logger
 from src.clear_file import BaseClearDataFile
 from src.models import InfoMessagesTable, FilesTable, MessagesTable
 
 
-class AddMessages(BaseClearDataFile):
+class AddMessages(BaseClearDataFile, Logger):
     def __init__(self, pathfile: str):
         super().__init__(pathfile=pathfile)
-        setup_logger()
 
         self.__id_file: int = 0
         self.__insert_file()

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, String, DateTime, Integer
 
-from sqlalchemy_config import Base
+from config.sqlalchemy_config import Base
 
 
 class FilesTable(Base):
@@ -11,7 +11,6 @@ class FilesTable(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     name = Column('name', String(255))
     path = Column('path', String(255))
-    # type = Column('type', String(10), nullable=True)
     created_at = Column('created_at', DateTime, default=datetime.now())
 
     def __repr__(self):

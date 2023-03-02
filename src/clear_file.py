@@ -5,13 +5,14 @@ from typing import List
 
 from loguru import logger
 
-from config import setup_logger
+from config import Logger
 from src.models import MessageModel, InfoMessageModel
 
 
-class BaseClearDataFile:
+class BaseClearDataFile(Logger):
     def __init__(self, pathfile: str):
-        setup_logger()
+        super().__init__()
+
         self.__path_file: str = pathfile
         self.__name_file: str = self.__get_base_name_file()
         self.__messages: List[MessageModel] = []

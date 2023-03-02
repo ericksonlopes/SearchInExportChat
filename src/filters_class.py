@@ -1,17 +1,15 @@
-import re
 from typing import List
 
 from loguru import logger
 from sqlalchemy import func
 
-from config import setup_logger
-from sqlalchemy_config import Conector
-from src.models import MessagesTable, DatesDto, NumberOfMessagesModel, PhoneLinksModel
+from config import Conector, Logger
+from src.models import MessagesTable, DatesDto, NumberOfMessagesModel
 
 
-class SearchInChatFilter:
+class SearchInChatFilter(Logger):
     def __init__(self, id_file: int):
-        setup_logger()
+        super().__init__()
         self.__id_file: int = id_file
 
     @property
@@ -93,7 +91,6 @@ class SearchInChatFilter:
     #         logger.info(f'Successfully extracted {len(list_phone_link)} links')
     #
     #         print(list_phone_link)
-
 
 
 if __name__ == '__main__':

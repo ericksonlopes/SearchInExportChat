@@ -1,7 +1,5 @@
-import sys
-
 import pytest
-from loguru import logger
+
 from src.clear_file import BaseClearDataFile
 
 
@@ -21,3 +19,5 @@ class TestClearDataFiles:
 
     def test_get_file(self):
         assert self.clear_data.path_file == self.file
+
+

@@ -1,8 +1,9 @@
 import os
+
 from dotenv import load_dotenv
+from sqlalchemy import URL
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy import URL
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ connection_string = URL.create(
 
 # Declarando bases e tabelas
 Base = declarative_base()
-from src.models.tables import *
+from src.models.entities import *
 
 # Criando engine com o banco de conexão
 engine = create_engine(connection_string, echo=False)

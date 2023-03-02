@@ -5,16 +5,15 @@ from typing import List
 
 from loguru import logger
 
-from config import setup_logger
+from config.get_logger import Logger
 from src.clear_file import BaseClearDataFile
 from src.models import MessageDto, FilterMessagesModel, NumberOfMessagesModel, PhoneLinksModel
 
 
-class FilterDataHandleBase(BaseClearDataFile):
+class FilterDataHandleBase(BaseClearDataFile, Logger):
 
     def __init__(self, pathfile: str):
         super().__init__(pathfile)
-        setup_logger()
 
     @property
     def group_or_privaty(self) -> str:

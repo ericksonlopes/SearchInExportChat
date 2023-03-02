@@ -1,16 +1,15 @@
 from dataclasses import dataclass
 from typing import List
 
-from loguru import logger
-
-from config import setup_logger
+from config.get_logger import Logger
 from src.models import MessageModel, MessageDto
 
 
 @dataclass
-class FilterMessagesModel(MessageDto):
+class FilterMessagesModel(MessageDto, Logger):
     """Filter messages by type and severity."""
-    setup_logger()
+    def __init__(self):
+        super().__init__()
 
     def __call__(self, messages: List[MessageModel]) -> List[MessageModel]:
         """Filter messages"""
@@ -28,10 +27,10 @@ class FilterMessagesModel(MessageDto):
                 messages = filter(lambda message: message.phone in self.list_phone, messages)
 
             result = list(messages)
-            logger.info(f'Successfully filtered {len(result)} messages')
-            logger.info(f'Filtered by {self.__dict__}')
+            self.logger.info(f'Successfully filtered {len(result)} messages')
+            self.logger.info(f'Filtered by {self.__dict__}')
         except Exception as error:
-            logger.error(f'Error filtering messages: {error}')
+            self.logger.error(f'Error filtering messages: {error}')
             raise error
 
         return result
