@@ -6,12 +6,11 @@ from src.models import MessageModel, MessageDto
 
 
 @dataclass
-class FilterMessagesModel(MessageDto, Logger):
+class FilterMessagesModel(MessageDto):
     """Filter messages by type and severity."""
-    def __init__(self):
-        super().__init__()
 
     def __call__(self, messages: List[MessageModel]) -> List[MessageModel]:
+        logger = Logger().logger
         """Filter messages"""
         try:
             if self.phone:
@@ -27,10 +26,10 @@ class FilterMessagesModel(MessageDto, Logger):
                 messages = filter(lambda message: message.phone in self.list_phone, messages)
 
             result = list(messages)
-            self.logger.info(f'Successfully filtered {len(result)} messages')
-            self.logger.info(f'Filtered by {self.__dict__}')
+            logger.info(f'Successfully filtered {len(result)} messages')
+            logger.info(f'Filtered by {self.__dict__}')
         except Exception as error:
-            self.logger.error(f'Error filtering messages: {error}')
+            logger.error(f'Error filtering messages: {error}')
             raise error
 
         return result
