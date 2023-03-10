@@ -6,7 +6,7 @@ from src.clear_file import BaseClearDataFile
 @pytest.mark.BaseClearDataFile
 class TestClearDataFiles:
     def setup_method(self):
-        self.file = 'tests/test_file_folder/test_group.txt'
+        self.file = '../tests/test_file_folder/test_group.txt'
         self.clear_data = BaseClearDataFile(self.file)
 
     def test_check_if_the_file_exists(self):
