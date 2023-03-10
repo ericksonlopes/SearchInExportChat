@@ -97,3 +97,10 @@ class BaseClearDataFile:
         except Exception as error:
             logger.error(error)
             raise error
+
+
+if __name__ == '__main__':
+    x = open('../tests/test_file_folder/test_group.txt', 'r')
+    file = BaseClearDataFile(file_data=x)
+    print(file.messages)
+    print(file.info_messages)
