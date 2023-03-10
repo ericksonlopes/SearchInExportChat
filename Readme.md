@@ -1,13 +1,13 @@
 # Instalação 🛠️
 
-[![Python package](https://github.com/Erickson-lopes-dev/SearchInExportChat/actions/workflows/python-app.yml/badge.svg)](https://github.com/Erickson-lopes-dev/SearchInExportChat/actions/workflows/python-app.yml)
+[![Python package](https://github.com/Erickson-lopes-dev/SearchInExportChat/actions/workflows/python-app.yml/badge.svg)](https://github.com/ericksonlopes/SearchInExportChat/actions/workflows/python-app.yml)
 
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/rich/10.11.0)](https://www.python.org/download/) ![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?&logo=Pytest&logoColor=FFFFFF)  ![Pandas](https://img.shields.io/badge/-pandas-150458?&logo=pandas&logoColor=FFFFFF)
 
 ```python
 git
 clone
-https: // github.com / Erickson - lopes - dev / SearchInExportChat - API
+https://github.com/ericksonlopes/SearchInExportChat - API
 cd
 SearchInExportChat - API /
 ```
