@@ -7,4 +7,4 @@ data = st.file_uploader('Escolha o arquivo', type=['txt'])
 if data is not None:
     base = BaseClearDataFile(file_data=data)
 
-    st.write(base.messages)
+    st.write([m.__dict__ for m in base.messages])
