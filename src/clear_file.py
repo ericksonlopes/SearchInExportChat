@@ -5,11 +5,10 @@ from typing import List
 
 from loguru import logger
 
-from config import Logger
 from src.models import MessageModel, InfoMessageModel
 
 
-class BaseClearDataFile(Logger):
+class BaseClearDataFile:
     def __init__(self, pathfile: str = "", file_data=None):
         super().__init__()
 
